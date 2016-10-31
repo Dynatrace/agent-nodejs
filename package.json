@@ -1,6 +1,6 @@
 {
   "name": "dynatrace",
-  "version": "1.101.170-0.0.3+20160830-115303",
+  "version": "1.103.237-0.0.1+20161018-100129",
   "description": "Dynatrace node.js agent for PaaS environments.",
   "main": "index.js",
   "directories": {
@@ -15,6 +15,6 @@
     "chai": "^3.5.0"
   },
   "dependencies": {
-    "dynatrace-oneagent-nodejs": "https://www.dropbox.com/s/fin4tu5tg6u0gch/Dynatrace-OneAgent-linux-nodejs-1.101.170.20160830-115303.tar.gz?dl=1"
+    "dynatrace-oneagent-nodejs": "https://www.dropbox.com/s/9wlqwfk1bkno8g6/Dynatrace-OneAgent-linux-nodejs-1.103.237.20161018-100129.tar.gz?dl=1"
   }
 }
