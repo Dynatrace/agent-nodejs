@@ -15,6 +15,6 @@
     "chai": "^3.5.0"
   },
   "dependencies": {
-    "dynatrace-oneagent-nodejs": "https://www.dropbox.com/s/9wlqwfk1bkno8g6/Dynatrace-OneAgent-linux-nodejs-1.103.237.20161018-100129.tar.gz?dl=1"
+    "dynatrace-oneagent-nodejs": "https://www.dropbox.com/s/0e76rux9muy8x5q/Dynatrace-OneAgent-linux-nodejs-1.103.237.20161018-100129.tar.gz?dl=1"
   }
 }
