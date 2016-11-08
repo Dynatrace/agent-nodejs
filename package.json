@@ -1,6 +1,6 @@
 {
   "name": "dynatrace",
-  "version": "1.103.237-0.0.3+20161018-100129-dev1",
+  "version": "1.103.237-0.0.4+20161018-100129",
   "description": "Dynatrace node.js agent for PaaS environments.",
   "main": "index.js",
   "directories": {
