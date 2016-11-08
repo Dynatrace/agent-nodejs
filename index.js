@@ -2,12 +2,40 @@
 
 var fs = require('fs');
 var path = require('path');
+var request = require('sync-request');
+
 
 var pathBase = null;
 var nodeagent = null;
+var defaultServer = 'live.dynatrace.com';
+
 
 var nodeagent = require('dynatrace-oneagent-nodejs');
 
+function discoverCredentials(environmentId, apiToken, server) {
+
+    var uri = null;
+    if(server) {
+        uri = server + `/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${apiToken}`;
+    } else {
+        uri = `https://${environmentId}.${defaultServer}/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${apiToken}`;
+    }
+
+
+    var res = request('GET', uri);
+    var credentials = JSON.parse(res.getBody('utf8'));
+
+    if(!credentials) {
+        throw new Error("Error fetching tenant token from " + uri);
+    }
+
+    return {
+            server: server ? server : defaultServer,
+            tenant: environmentId,
+            tenanttoken: credentials.tenantToken,
+            loglevelcon: 'none'
+        };
+}
 
 function handleCloudFoundry(vcapServices, vcapApplication) {
 
@@ -21,18 +49,32 @@ function handleCloudFoundry(vcapServices, vcapApplication) {
     // Check for tenant and tenant token
     // Set server uri if no provided
     // https://xwn73283.dev.ruxitlabs.com:443/communication
+
+    var credentials = null;
+
     if (vcapServices['ruxit'] && vcapServices['ruxit'][0]) {
-        return nodeagent(vcapServices['ruxit'][0].credentials);
+        credentials = nodeagent(vcapServices['ruxit'][0].credentials);
     } else if (vcapServices['dynatrace'] && vcapServices['dynatrace'][0]) {
-        return nodeagent(vcapServices['dynatrace'][0].credentials);
+        credentials = nodeagent(vcapServices['dynatrace'][0].credentials);
     } else if (vcapServices['user-provided'] && vcapServices['user-provided'][0]) {
-        return nodeagent(vcapServices['user-provided'][0].credentials);
+        credentials = nodeagent(vcapServices['user-provided'][0].credentials);
     } else {
-        return credentialError();
+        throw new Error('Error discovering credentials');
     }
+
+    if(credentials.environmentid && credentials.apitoken) {
+
+        discoverCredentials(credentials.environmentid, credentials.apitoken, credentials.server, function(err, credentials) {
+            if(err) throw new Error('Error discovering credentials');
+            return nodeagent(credentials);
+        });
+    } else {
+        return nodeagent(credentials);
+    }
+
 }
 
-function handleHeroku(options) {
+function handleHeroku(options, cb) {
 
     console.log('Heroku environment detected.');
 
@@ -50,10 +92,6 @@ function handleHeroku(options) {
 
     process.env.RUXIT_IGNOREDYNAMICPORT = true;
     return nodeagent(options);
-}
-
-function credentialError() {
-    throw new Error('No credentials passed or set in environment!');
 }
 
 module.exports = function agentLoader(options) {
@@ -75,10 +113,11 @@ module.exports = function agentLoader(options) {
 
             return handleCloudFoundry(vcapObject, vcapApplication);
         } else {
-            return credentialError();
+            throw new Error('Error parsing credentials');
         }
     } else if (process.env.DYNO) {
         return handleHeroku(options);
     }
+
     return nodeagent(options);
 };
