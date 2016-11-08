@@ -19,9 +19,9 @@ function discoverCredentials(options) {
 
     var uri = null;
     if(options.server) {
-        uri = options.server + `/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${options.apiToken}`;
+        uri = options.server + `/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${options.apitoken}`;
     } else {
-        uri = `https://${options.environmentid}.${defaultServer}/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${options.apiToken}`;
+        uri = `https://${options.environmentid}.${defaultServer}/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${options.apitoken}`;
     }
 
     debug('Discovering credentials from ', uri);
