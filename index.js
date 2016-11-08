@@ -11,13 +11,17 @@ var defaultServer = 'live.dynatrace.com';
 
 var nodeagent = require('dynatrace-oneagent-nodejs');
 
-function discoverCredentials(environmentId, apiToken, server) {
+function discoverCredentials(options) {
+
+    if(!options.environmentid || !options.apitoken) {
+        return options;
+    }
 
     var uri = null;
-    if(server) {
-        uri = server + `/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${apiToken}`;
+    if(options.server) {
+        uri = options.server + `/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${apiToken}`;
     } else {
-        uri = `https://${environmentId}.${defaultServer}/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${apiToken}`;
+        uri = `https://${options.environmentid}.${defaultServer}/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${apiToken}`;
     }
 
     debug('Discovering credentials from ', uri);
@@ -31,7 +35,7 @@ function discoverCredentials(environmentId, apiToken, server) {
 
     return {
             server: server ? server : defaultServer,
-            tenant: environmentId,
+            tenant: ptions.environmentid,
             tenanttoken: credentials.tenantToken,
             loglevelcon: 'none'
         };
@@ -62,11 +66,7 @@ function handleCloudFoundry(vcapServices, vcapApplication) {
         throw new Error('Error discovering credentials');
     }
 
-    if(credentials.environmentid && credentials.apitoken) {
-        credentials = discoverCredentials(credentials.environmentid, credentials.apitoken, credentials.server);
-    } 
-    
-    return nodeagent(credentials);
+    return nodeagent(discoverCredentials(credentials));
 
 }
 
@@ -87,7 +87,8 @@ function handleHeroku(options, cb) {
     } 
 
     process.env.RUXIT_IGNOREDYNAMICPORT = true;
-    return nodeagent(options);
+
+    return nodeagent(discoverCredentials(options));
 }
 
 module.exports = function agentLoader(options) {
@@ -118,11 +119,6 @@ module.exports = function agentLoader(options) {
 
     debug('Using passed in options');
 
-    if(options.environmentid && options.apitoken) {
-        var credentials = discoverCredentials(options.environmentid, options.apitoken, options.server);
-        return nodeagent(credentials);
-    } else {
-        return nodeagent(options);
-    }
+    return nodeagent(discoverCredentials(options));
     
 };
