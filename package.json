@@ -15,6 +15,7 @@
     "chai": "^3.5.0"
   },
   "dependencies": {
+    "debug": "^2.3.0",
     "dynatrace-oneagent-nodejs": "https://download.ruxit.com/agent/paas/Dynatrace-OneAgent-linux-nodejs-1.103.237.20161018-100129.tar.gz",
     "superagent": "^2.3.0",
     "sync-request": "^3.0.1"

@@ -3,10 +3,9 @@
 var fs = require('fs');
 var path = require('path');
 var request = require('sync-request');
-
-
 var pathBase = null;
 var nodeagent = null;
+var debug = require('debug')('dynatrace')
 var defaultServer = 'live.dynatrace.com';
 
 
@@ -21,6 +20,7 @@ function discoverCredentials(environmentId, apiToken, server) {
         uri = `https://${environmentId}.${defaultServer}/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${apiToken}`;
     }
 
+    debug('Discovering credentials from ', url);
 
     var res = request('GET', uri);
     var credentials = JSON.parse(res.getBody('utf8'));
@@ -39,7 +39,7 @@ function discoverCredentials(environmentId, apiToken, server) {
 
 function handleCloudFoundry(vcapServices, vcapApplication) {
 
-    console.log('Cloud foundry environment detected.');
+    debug('Cloud foundry environment detected.');
     process.env.RUXIT_APPLICATIONID = vcapApplication.application_name;
     // process.env.RUXIT_CLUSTER_ID = vcapApplication.application_name;
     process.env.RUXIT_HOST_ID = vcapApplication.application_name + '_' + process.env.CF_INSTANCE_INDEX;
@@ -72,7 +72,7 @@ function handleCloudFoundry(vcapServices, vcapApplication) {
 
 function handleHeroku(options, cb) {
 
-    console.log('Heroku environment detected.');
+    debug('Heroku environment detected.');
 
     // Dyno metadata is a labs feature and can be enabled via  
     // $ heroku labs:enable runtime-dyno-metadata -a <app name>
@@ -115,6 +115,8 @@ module.exports = function agentLoader(options) {
         return handleHeroku(options);
     }
 
+
+    debug('Using passed in options');
 
     if(options.environmentid && options.apitoken) {
         var credentials = discoverCredentials(options.environmentid, options.apitoken, options.server);
