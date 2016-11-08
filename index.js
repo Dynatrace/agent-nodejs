@@ -34,7 +34,7 @@ function discoverCredentials(options) {
     }
 
     return {
-            server: server ? options.server : defaultServer,
+            server: options.server ? options.server : defaultServer,
             tenant: options.environmentid,
             tenanttoken: credentials.tenantToken,
             loglevelcon: 'none'
