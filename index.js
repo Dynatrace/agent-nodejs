@@ -63,14 +63,10 @@ function handleCloudFoundry(vcapServices, vcapApplication) {
     }
 
     if(credentials.environmentid && credentials.apitoken) {
-
-        discoverCredentials(credentials.environmentid, credentials.apitoken, credentials.server, function(err, credentials) {
-            if(err) throw new Error('Error discovering credentials');
-            return nodeagent(credentials);
-        });
-    } else {
-        return nodeagent(credentials);
-    }
+        credentials = discoverCredentials(credentials.environmentid, credentials.apitoken, credentials.server);
+    } 
+    
+    return nodeagent(credentials);
 
 }
 
@@ -119,5 +115,12 @@ module.exports = function agentLoader(options) {
         return handleHeroku(options);
     }
 
-    return nodeagent(options);
+
+    if(options.environmentid && options.apitoken) {
+        var credentials = discoverCredentials(options.environmentid, options.apitoken, options.server);
+        return nodeagent(credentials);
+    } else {
+        return nodeagent(options);
+    }
+    
 };
