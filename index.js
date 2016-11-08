@@ -41,7 +41,7 @@ function handleCloudFoundry(vcapServices, vcapApplication) {
 
     console.log('Cloud foundry environment detected.');
     process.env.RUXIT_APPLICATIONID = vcapApplication.application_name;
-    process.env.RUXIT_CLUSTER_ID = vcapApplication.application_name;
+    // process.env.RUXIT_CLUSTER_ID = vcapApplication.application_name;
     process.env.RUXIT_HOST_ID = vcapApplication.application_name + '_' + process.env.CF_INSTANCE_INDEX;
     process.env.RUXIT_IGNOREDYNAMICPORT = true;
 
