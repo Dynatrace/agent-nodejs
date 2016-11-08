@@ -24,10 +24,12 @@ function discoverCredentials(options) {
         uri = `https://${options.environmentid}.${defaultServer}/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${options.apitoken}`;
     }
 
-    debug('Discovering credentials from ', uri);
+    debug('Trying to discover credentials from ', uri);
 
     var res = request('GET', uri);
     var credentials = JSON.parse(res.getBody('utf8'));
+
+    debug('Got credentials from ', uri);
 
     if(!credentials) {
         throw new Error("Error fetching tenant token from " + uri);
