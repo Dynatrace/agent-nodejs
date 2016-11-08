@@ -40,7 +40,7 @@ function discoverCredentials(options) {
             server: options.server ? options.server : defaultServer,
             tenant: options.environmentid,
             tenanttoken: credentials.tenantToken,
-            loglevelcon: 'none'
+            // loglevelcon: 'none'
         };
 }
 
