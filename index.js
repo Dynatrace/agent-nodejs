@@ -19,9 +19,9 @@ function discoverCredentials(options) {
 
     var uri = null;
     if(options.server) {
-        uri = options.server + `/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${apiToken}`;
+        uri = options.server + `/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${options.apiToken}`;
     } else {
-        uri = `https://${options.environmentid}.${defaultServer}/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${apiToken}`;
+        uri = `https://${options.environmentid}.${defaultServer}/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${options.apiToken}`;
     }
 
     debug('Discovering credentials from ', uri);
@@ -35,7 +35,7 @@ function discoverCredentials(options) {
 
     return {
             server: server ? server : defaultServer,
-            tenant: ptions.environmentid,
+            tenant: options.environmentid,
             tenanttoken: credentials.tenantToken,
             loglevelcon: 'none'
         };
