@@ -20,7 +20,7 @@ function discoverCredentials(environmentId, apiToken, server) {
         uri = `https://${environmentId}.${defaultServer}/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${apiToken}`;
     }
 
-    debug('Discovering credentials from ', url);
+    debug('Discovering credentials from ', uri);
 
     var res = request('GET', uri);
     var credentials = JSON.parse(res.getBody('utf8'));
