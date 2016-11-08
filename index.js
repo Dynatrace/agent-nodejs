@@ -14,6 +14,7 @@ var nodeagent = require('dynatrace-oneagent-nodejs');
 function discoverCredentials(options) {
 
     if(!options.environmentid || !options.apitoken) {
+        debug('No API token found - using legacy authentication');
         return options;
     }
 
