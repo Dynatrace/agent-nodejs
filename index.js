@@ -14,14 +14,14 @@ var defaultServer = 'live.dynatrace.com';
 var nodeagent = require('dynatrace-oneagent-nodejs');
 
 function _tenant(options) {
-    return options['environmentid'] || options['server'];
+    return options['environmentid'] || options['tenant'];
 }
 
 function _tenanttoken(options) {
 
     if (!options.environmentid || !options.apitoken) {
         debug('No API token found - using legacy authentication');
-        return options;
+        return options.tenanttoken;
     }
 
     var uri = null;
@@ -50,6 +50,7 @@ function _agentOptions(options) {
         server: _server(options),
         tenant: _tenant(options),
         tenanttoken: _tenanttoken(options),
+        // loglevelcon: 'none'
     }
 }
 
@@ -71,8 +72,7 @@ function _cfParseVcap(vcapServices) {
         if (key === 'user-provided') {
 
             for (var j = 0; j < vcapServices[key].length; j++) {
-                var userService = vcapServices[key][i];
-
+                var userService = vcapServices[key][j];
                 if (userService.name && userService.name.search(rgx) !== -1 ) {
                     return userService.credentials;
                 }
