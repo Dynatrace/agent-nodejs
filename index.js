@@ -9,6 +9,8 @@ var debug = require('debug')('dynatrace')
 var defaultServer = 'live.dynatrace.com';
 
 
+
+
 var nodeagent = require('dynatrace-oneagent-nodejs');
 
 function _tenant(options) {
@@ -45,11 +47,57 @@ function _server(options) {
 
 function _agentOptions(options) {
     return {
-        server: _server(options),   
-        tenant: _tenant(options),    
-        tenanttoken: _tenanttoken(options), 
+        server: _server(options),
+        tenant: _tenant(options),
+        tenanttoken: _tenanttoken(options),
     }
 }
+
+let x = {
+    "VCAP_SERVICES": {
+        "user-provided": [
+            {
+                "credentials": {
+                    "apitoken": "jvbyp3qUTR6rGZwQI1fTx",
+                    "environmentid": "kwl61035"
+                },
+                "label": "user-provided",
+                "name": "dynatrace-api",
+                "syslog_drain_url": "",
+                "tags": [],
+                "volume_mounts": []
+            }
+        ]
+    }
+}
+
+let y = {
+    "VCAP_SERVICES": {
+        "dynatrace": [
+            {
+                "credentials": {
+                    "apitoken": "jvbyp3qUTR6rGZwQI1fTx",
+                    "environmentid": "kwl61035"
+                },
+                "label": "dynatrace",
+                "name": "kwl",
+                "plan": "kwl",
+                "provider": null,
+                "syslog_drain_url": null,
+                "tags": [
+                    "dynatrace",
+                    "performance",
+                    "monitoring",
+                    "apm",
+                    "analytics"
+                ],
+                "volume_mounts": []
+            }
+        ]
+    }
+}
+
+
 
 function handleCloudFoundry(vcapServices, vcapApplication) {
 
@@ -67,11 +115,11 @@ function handleCloudFoundry(vcapServices, vcapApplication) {
     var credentials = null;
 
     if (vcapServices['ruxit'] && vcapServices['ruxit'][0]) {
-        credentials = nodeagent(vcapServices['ruxit'][0].credentials);
+        credentials = vcapServices['ruxit'][0].credentials;
     } else if (vcapServices['dynatrace'] && vcapServices['dynatrace'][0]) {
-        credentials = nodeagent(vcapServices['dynatrace'][0].credentials);
-    } else if (vcapServices['user-provided'] && vcapServices['user-provided'][0]) {
-        credentials = nodeagent(vcapServices['user-provided'][0].credentials);
+        credentials = vcapServices['dynatrace'][0].credentials;
+    } else if (vcapServices['user-provided']) {
+        credentials = vcapServices['user-provided'][0].credentials;
     } else {
         throw new Error('Error discovering credentials');
     }
