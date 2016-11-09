@@ -53,51 +53,48 @@ function _agentOptions(options) {
     }
 }
 
-let x = {
-    "VCAP_SERVICES": {
-        "user-provided": [
-            {
-                "credentials": {
-                    "apitoken": "jvbyp3qUTR6rGZwQI1fTx",
-                    "environmentid": "kwl61035"
-                },
-                "label": "user-provided",
-                "name": "dynatrace-api",
-                "syslog_drain_url": "",
-                "tags": [],
-                "volume_mounts": []
+
+
+function _cfParseVcap(vcapServices) {
+    var credentials = null;
+    var rgx = /dynatrace|ruxit/;
+
+    var serviceProperties = Object.keys(vcapServices);
+
+    for (var i = 0; i < serviceProperties.length; i++) {
+        var key = serviceProperties[i];
+
+        if (key.search(rgx) !== -1 && vcapServices[key][0]) {
+            return vcapServices[key][0].credentials;
+        }
+
+        if (key === 'user-provided') {
+
+            for (var j = 0; j < vcapServices[key].length; j++) {
+                var userService = vcapServices[key][i];
+
+                if (userService.name && userService.name.search(rgx) !== -1 ) {
+                    return userService.credentials;
+                }
+
+                if (userService.label && userService.label.search(rgx) !== -1) {
+                    return userService.credentials;
+                }
+
+                if (userService.tags) {
+                    for (var k = 0; k < userService.tags.length; k++) {
+                        if (userService.tags[k].search(rgx) !== -1) {
+                            return userService.credentials;
+                        }
+                    }
+
+                }
+
             }
-        ]
+
+        }
     }
 }
-
-let y = {
-    "VCAP_SERVICES": {
-        "dynatrace": [
-            {
-                "credentials": {
-                    "apitoken": "jvbyp3qUTR6rGZwQI1fTx",
-                    "environmentid": "kwl61035"
-                },
-                "label": "dynatrace",
-                "name": "kwl",
-                "plan": "kwl",
-                "provider": null,
-                "syslog_drain_url": null,
-                "tags": [
-                    "dynatrace",
-                    "performance",
-                    "monitoring",
-                    "apm",
-                    "analytics"
-                ],
-                "volume_mounts": []
-            }
-        ]
-    }
-}
-
-
 
 function handleCloudFoundry(vcapServices, vcapApplication) {
 
@@ -106,26 +103,10 @@ function handleCloudFoundry(vcapServices, vcapApplication) {
     // process.env.RUXIT_CLUSTER_ID = vcapApplication.application_name;
     process.env.RUXIT_HOST_ID = vcapApplication.application_name + '_' + process.env.CF_INSTANCE_INDEX;
     process.env.RUXIT_IGNOREDYNAMICPORT = true;
-
-    // Test with regex
-    // Check for tenant and tenant token
-    // Set server uri if no provided
-    // https://xwn73283.dev.ruxitlabs.com:443/communication
-
-    var credentials = null;
-
-    if (vcapServices['ruxit'] && vcapServices['ruxit'][0]) {
-        credentials = vcapServices['ruxit'][0].credentials;
-    } else if (vcapServices['dynatrace'] && vcapServices['dynatrace'][0]) {
-        credentials = vcapServices['dynatrace'][0].credentials;
-    } else if (vcapServices['user-provided']) {
-        credentials = vcapServices['user-provided'][0].credentials;
-    } else {
-        throw new Error('Error discovering credentials');
-    }
+    var credentials = _cfParseVcap(vcapServices);
+    if (!credentials) throw new Error("No credentials found in VCAP_SERVICES");
 
     return nodeagent(_agentOptions(credentials));
-
 }
 
 function handleHeroku(options) {

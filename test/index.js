@@ -1,17 +1,17 @@
 var expect = require('chai').expect;
 var util = require('util');
 
-if (!process.env.test_server) throw new Error("Node 'testoptions' environment variable found");
+var testData = require('./data')
+
 
 describe('Agent loader outside of known PaaS env', function () {
     this.timeout(15000);
 
     it('should return with _rx.cfg set', function (done) {
         require('../index')({
-                server: process.env.test_server,
-                tenant: process.env.test_tenant,
-                tenanttoken: process.env.test_tenanttoken,
-                loglevelcon: process.env.test_loglevelcon
+                server: testData.server,
+                tenant: testData.environmentid,
+                tenanttoken: testData.tenanttoken
             }
         );
 
@@ -39,16 +39,15 @@ describe("Agent loader within Cloud Foundry VCAP_SERVICES['ruxit'] set", functio
 
     it("should set global and environment variables", function (done) {
         var vcapServices = {
-            'ruxit': [
-                {
+            'ruxit-service': [{
                     "credentials": {
-                        "server": process.env.test_server,
-                        "tenant": process.env.test_tenant,
-                        "tenanttoken": process.env.test_tenanttoken
+                        "server": testData.server,
+                        "tenant": testData.environmentid,
+                        "tenanttoken": testData.tenanttoken
                     },
                     "label": "ruxit",
                     "name": "test-1",
-                    "plan": process.env.test_tenant,
+                    "plan": 'someplan',
                     "tags": [
                         "ruxit",
                         "performance",
@@ -63,6 +62,7 @@ describe("Agent loader within Cloud Foundry VCAP_SERVICES['ruxit'] set", functio
         var vcapApplication = {
             "application_name" : "test-1"
         };
+
         process.env.VCAP_APPLICATION = JSON.stringify(vcapApplication);
 
         process.env.VCAP_SERVICES = JSON.stringify(vcapServices);
@@ -72,7 +72,7 @@ describe("Agent loader within Cloud Foundry VCAP_SERVICES['ruxit'] set", functio
         require('../index')();
 
         expect(process.env.RUXIT_HOST_ID).to.be.defined;
-        expect(process.env.RUXIT_CLUSTER_ID).to.be.defined;
+        // expect(process.env.RUXIT_CLUSTER_ID).to.be.defined;
         expect(process.env.RUXIT_APPLICATIONID).to.equal('test-1');
         expect(process.env.RUXIT_IGNOREDYNAMICPORT).to.be.defined;
 
@@ -90,12 +90,23 @@ describe("Agent loader within Cloud Foundry VCAP_SERVICES['user-provided'] set",
             'user-provided': [
                 {
                     "credentials": {
-                        "server": process.env.test_server,
-                        "tenant": process.env.test_tenant,
-                        "tenanttoken": process.env.test_tenanttoken
+                        "server": testData.server,
+                        "tenant": testData.environmentid,
+                        "tenanttoken": testData.tenanttoken
                     },
                     "label": "user-provided",
                     "name": "test-2",
+                    "syslog_drain_url": "",
+                    "tags": []
+                },
+                {
+                    "credentials": {
+                        "server": testData.server,
+                        "tenant": testData.environmentid,
+                        "tenanttoken": testData.tenanttoken
+                    },
+                    "label": "dynatrace-service",
+                    "name": "test-3",
                     "syslog_drain_url": "",
                     "tags": []
                 }
@@ -103,13 +114,15 @@ describe("Agent loader within Cloud Foundry VCAP_SERVICES['user-provided'] set",
         };
 
         var vcapApplication = {
-            "application_name" : "test-2"
+            "application_name" : "test-3"
         };
         process.env.VCAP_APPLICATION = JSON.stringify(vcapApplication);
 
         process.env.VCAP_SERVICES = JSON.stringify(vcapServices);
         process.env.CF_INSTANCE_INDEX = 2;
         process.env.VCAP_SERVICES = JSON.stringify(vcapServices);
+
+
 
         require('../index')();
 
