@@ -11,19 +11,19 @@ var defaultServer = 'live.dynatrace.com';
 
 var nodeagent = require('dynatrace-oneagent-nodejs');
 
-function discoverCredentials(options) {
+function _tenant(options) {
+    return options['environmentid'] || options['server'];
+}
 
-    if(!options.environmentid || !options.apitoken) {
+function _tenanttoken(options) {
+
+    if (!options.environmentid || !options.apitoken) {
         debug('No API token found - using legacy authentication');
         return options;
     }
 
     var uri = null;
-    if(options.server) {
-        uri = options.server + `/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${options.apitoken}`;
-    } else {
-        uri = `https://${options.environmentid}.${defaultServer}/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${options.apitoken}`;
-    }
+    uri = _server(options) + `/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${options.apitoken}`;
 
     debug('Trying to discover credentials from ', uri);
 
@@ -32,16 +32,23 @@ function discoverCredentials(options) {
 
     debug('Got credentials from ', uri);
 
-    if(!credentials) {
+    if (!credentials) {
         throw new Error("Error fetching tenant token from " + uri);
     }
 
+    return credentials.tenantToken;
+}
+
+function _server(options) {
+    return options['endpoint'] || options['server'] || "https://#{_tenant(credentials)}.live.dynatrace.com";
+}
+
+function _agentOptions(options) {
     return {
-            server: options.server ? options.server : defaultServer,
-            tenant: options.environmentid,
-            tenanttoken: credentials.tenantToken,
-            // loglevelcon: 'none'
-        };
+        server: _server(options),   
+        tenant: _tenant(options),    
+        tenanttoken: _tenanttoken(options), 
+    }
 }
 
 function handleCloudFoundry(vcapServices, vcapApplication) {
@@ -69,11 +76,11 @@ function handleCloudFoundry(vcapServices, vcapApplication) {
         throw new Error('Error discovering credentials');
     }
 
-    return nodeagent(discoverCredentials(credentials));
+    return nodeagent(_agentOptions(credentials));
 
 }
 
-function handleHeroku(options, cb) {
+function handleHeroku(options) {
 
     debug('Heroku environment detected.');
 
@@ -87,11 +94,10 @@ function handleHeroku(options, cb) {
     if (process.env.HEROKU_APP_NAME) {
         process.env.RUXIT_CLUSTER_ID = process.env.HEROKU_APP_NAME;
         process.env.RUXIT_APPLICATIONID = process.env.HEROKU_APP_NAME;
-    } 
-
+    }
     process.env.RUXIT_IGNOREDYNAMICPORT = true;
 
-    return nodeagent(discoverCredentials(options));
+    return nodeagent(_agentOptions(options));
 }
 
 module.exports = function agentLoader(options) {
@@ -122,6 +128,6 @@ module.exports = function agentLoader(options) {
 
     debug('Using passed in options');
 
-    return nodeagent(discoverCredentials(options));
-    
+    return nodeagent(_agentOptions(options));
+
 };
