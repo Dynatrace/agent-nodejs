@@ -1,6 +1,8 @@
 {
   "name": "dynatrace",
-  "version": "1.105.215-0.0.1+20161107-103802",
+
+  "version": "1.105.218-1.0.0+20161108-143652",
+
   "description": "Dynatrace node.js agent for PaaS environments.",
   "main": "index.js",
   "directories": {
@@ -15,6 +17,9 @@
     "chai": "^3.5.0"
   },
   "dependencies": {
-    "dynatrace-oneagent-nodejs": "https://download.ruxit.com/agent/paas/Dynatrace-OneAgent-linux-nodejs-1.105.215.20161107-103802.tar.gz"
+    "debug": "^2.3.0",
+    "dynatrace-oneagent-nodejs": "https://download.ruxit.com/agent/paas/Dynatrace-OneAgent-linux-nodejs-1.105.218.20161108-143652.tar.gz",
+    "superagent": "^2.3.0",
+    "sync-request": "^3.0.1"
   }
 }
