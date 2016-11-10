@@ -42,7 +42,7 @@ function _tenanttoken(options) {
 }
 
 function _server(options) {
-    return options['endpoint'] || options['server'] || "https://#{_tenant(options)}.live.dynatrace.com";
+    return options['endpoint'] || options['server'] || `https://${_tenant(options)}.live.dynatrace.com`;
 }
 
 function _agentOptions(options) {
