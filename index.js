@@ -42,7 +42,7 @@ function _tenanttoken(options) {
 }
 
 function _server(options) {
-    return options['endpoint'] || options['server'] || "https://#{_tenant(credentials)}.live.dynatrace.com";
+    return options['endpoint'] || options['server'] || "https://#{_tenant(options)}.live.dynatrace.com";
 }
 
 function _agentOptions(options) {
@@ -68,7 +68,6 @@ function _cfParseVcap(vcapServices) {
         if (key.search(rgx) !== -1 && vcapServices[key][0]) {
             return vcapServices[key][0].credentials;
         } else {
-
             for (var j = 0; j < vcapServices[key].length; j++) {
                 var userService = vcapServices[key][j];
                 if (userService.name && userService.name.search(rgx) !== -1 ) {
@@ -85,11 +84,8 @@ function _cfParseVcap(vcapServices) {
                             return userService.credentials;
                         }
                     }
-
                 }
-
             }
-
         }
     }
 }
