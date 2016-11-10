@@ -67,9 +67,7 @@ function _cfParseVcap(vcapServices) {
 
         if (key.search(rgx) !== -1 && vcapServices[key][0]) {
             return vcapServices[key][0].credentials;
-        }
-
-        if (key === 'user-provided') {
+        } else {
 
             for (var j = 0; j < vcapServices[key].length; j++) {
                 var userService = vcapServices[key][j];
