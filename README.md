@@ -38,9 +38,9 @@ try {
 
 * Deploy the application to Heroku
 
-# Disclaimer
+## Disclaimer
 This module is supported by the Dynatrace Innovation Lab.
 Please create an issue for this repository if you need help.
 
-# Licence
+## Licence
 Licensed under the MIT License. See the LICENSE file for details.
