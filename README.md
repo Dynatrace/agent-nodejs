@@ -1,6 +1,6 @@
 # Dynatrace npm module for PaaS
 
-This module adds enterprise grade monitoring for Node.js in environments like Pivotal CloudFoundry or Heroku.
+This module adds enterprise grade monitoring for Node.js in environments like Cloud Foundry or Heroku.
 For any other environment please use the full installer provided in your Dynatrace environment.
 
 ## Installation
@@ -8,7 +8,7 @@ For any other environment please use the full installer provided in your Dynatra
 * Click on "Deploy Dynatrace"
 * Click on "Set up PaaS Integration"
 * Generate an API token
-* Run `$ npm install --save dynatrace` in your project directory
+* Run `$ npm install --save https://github.com/Dynatrace/agent-nodejs.git` in your project directory
 
 ### Deploying Dynatrace to CloudFoundry
 * Set up the Dynatrace service broker using the credentials created in the previopus step as described in the [Pivotal documentation](https://docs.pivotal.io/dynatrace/installing.html)
@@ -20,7 +20,7 @@ try {
     console.log(err.toString());
 }
 ```
-* Deploy the application to CloudFoundry
+* Deploy the application to Cloud Foundry
 
 ### Deploying Dynatrace to Heroku
 * Use the credentials created in the first step and add the following code block as first statement to your application
