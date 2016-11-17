@@ -15,7 +15,7 @@ For any other environment please use the full installer provided in your Dynatra
 * As first statement of your application add 
 ```js
 try {
-    require('dynatrace')();
+    require('@dynatrace/oneagent')();
 } catch(err) {
     console.log(err.toString());
 }
@@ -27,7 +27,7 @@ try {
 
 ```js
 try {
-    require('dynatrace')({
+    require('@dynatrace/oneagent')({
         environmentid: '<environmentid>',
         apitoken: '<apitoken>',
     });
