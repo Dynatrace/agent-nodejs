@@ -1,9 +1,29 @@
 {
-  "name": "dynatrace",
+  "name": "@dynatrace/oneagent",
 
-  "version": "1.105.218-1.0.0+20161108-143652",
-
-  "description": "Dynatrace node.js agent for PaaS environments.",
+  "version": "1.105.218-1.0.1+20161108-143652",
+  "licence": "MIT",
+  "repository": "Dynatrace/agent-nodejs",
+  "bugs": {
+    "url": "https://github.com/Dynatrace/agent-nodejs/issues"
+  },
+  "description": "Dynatrace node.js oneagent for PaaS environments.",
+   "keywords": [
+    "dynatrace", 
+    "node.js", 
+    "oneagent", 
+    "performance", 
+    "monitoring", 
+    "cloudfoundry", 
+    "heroku", 
+    "bluemix",
+    "ruxit",
+    "paas",
+    "pivotal",
+    "hp helion",
+    "atos",
+    "ge predix"
+  ],
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -11,8 +31,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Dynatrace",
   "devDependencies": {
     "chai": "^3.5.0"
   },

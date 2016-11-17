@@ -8,7 +8,7 @@ For any other environment please use the full installer provided in your Dynatra
 * Click on "Deploy Dynatrace"
 * Click on "Set up PaaS Integration"
 * Generate an API token
-* Run `$ npm install --save https://github.com/Dynatrace/agent-nodejs.git` in your project directory
+* Run `$ npm install --save @dynatrace/oneagent` in your project directory
 
 ### Deploying Dynatrace to CloudFoundry
 * Set up the Dynatrace service broker using the credentials created in the previopus step as described in the [Pivotal documentation](https://docs.pivotal.io/dynatrace/installing.html)
