@@ -62,7 +62,7 @@ function _agentOptions(options) {
     const credentials = _credentials(options);
 
     return {
-        server:  credentials.communicationEndpoints ? credentials.communicationEndpoints.join('\;') : _server(options),
+        server:  credentials.communicationEndpoints ? credentials.communicationEndpoints.join(';') : _server(options),
         tenant: _tenant(options),
         tenanttoken: credentials.tenanttoken,
         // loglevelcon: 'none'
