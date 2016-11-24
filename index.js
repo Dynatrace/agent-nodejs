@@ -17,15 +17,30 @@ function _tenant(options) {
     return options['environmentid'] || options['tenant'];
 }
 
-function _tenanttoken(options) {
+function _api_base_url(options) {
+    if(options.apiurl) {
+        debug('Using provided API url', options.apiurl);
+        return options.apiurl;
+    }
+    let base_url = options['endpoint'] || options['server'] || `https://${_tenant(options)}.live.dynatrace.com`;
+    return base_url.replace('/communication', '').replace(':8443', '').replace(':443', '') + '/api';
+
+}
+
+function _credentials(options) {
 
     if (!options.environmentid || !options.apitoken) {
         debug('No API token found - using legacy authentication');
-        return options.tenanttoken;
+        return options;
     }
 
     var uri = null;
-    uri = _server(options) + `/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${options.apitoken}`;
+
+    if(options.apiurl) {
+        return 
+    }
+
+    uri = _api_base_url(options) + `/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${options.apitoken}`;
 
     debug('Trying to discover credentials from ', uri);
 
@@ -38,18 +53,22 @@ function _tenanttoken(options) {
         throw new Error("Error fetching tenant token from " + uri);
     }
 
-    return credentials.tenantToken;
+    return credentials;
 }
 
 function _server(options) {
     return options['endpoint'] || options['server'] || `https://${_tenant(options)}.live.dynatrace.com`;
 }
 
+
 function _agentOptions(options) {
+
+    const credentials = _credentials(options);
+
     return {
-        server: _server(options),
+        server: credentials.endpoints ? credentials.endpoints : _server(options),
         tenant: _tenant(options),
-        tenanttoken: _tenanttoken(options),
+        tenanttoken: credentials.tenanttoken,
         // loglevelcon: 'none'
     }
 }
