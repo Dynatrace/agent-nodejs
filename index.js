@@ -36,11 +36,7 @@ function _credentials(options) {
 
     var uri = null;
 
-    if(options.apiurl) {
-        return 
-    }
-
-    uri = _api_base_url(options) + `/api/v1/deployment/installer/agent/connectioninfo?Api-Token=${options.apitoken}`;
+    uri = _api_base_url(options) + `/v1/deployment/installer/agent/connectioninfo?Api-Token=${options.apitoken}`;
 
     debug('Trying to discover credentials from ', uri);
 
@@ -66,7 +62,7 @@ function _agentOptions(options) {
     const credentials = _credentials(options);
 
     return {
-        server: credentials.endpoints ? credentials.endpoints : _server(options),
+        server:  credentials.communicationEndpoints ? credentials.communicationEndpoints.join('\;') : _server(options),
         tenant: _tenant(options),
         tenanttoken: credentials.tenanttoken,
         // loglevelcon: 'none'
