@@ -160,6 +160,55 @@ describe("Agent loader within Cloud Foundry VCAP_SERVICES['dynatrace-service'] s
     });
 });
 
+describe("Agent loader within Cloud Foundry VCAP_SERVICES['dynatrace-service'] set using apitoken and apiurl", function () {
+    this.timeout(15000);
+
+
+    it("should set global and environment variables", function (done) {
+        var vcapServices = {
+            'dynatrace-service': [{
+                    "credentials": {
+                        "server": testData.server,
+                        "tenant": testData.environmentid,
+                        "apitoken": testData.apitoken,
+                        "apiurl": testData.apiurl,
+                    },
+                    "label": "ruxit",
+                    "name": "test-1",
+                    "plan": 'someplan',
+                    "tags": [
+                        "ruxit",
+                        "performance",
+                        "monitoring",
+                        "apm",
+                        "analytics"
+                    ]
+                }
+            ]
+        };
+
+        var vcapApplication = {
+            "application_name" : "test-1"
+        };
+
+        process.env.VCAP_APPLICATION = JSON.stringify(vcapApplication);
+
+        process.env.VCAP_SERVICES = JSON.stringify(vcapServices);
+        process.env.CF_INSTANCE_INDEX = 1;
+
+
+        require('../index')();
+
+        expect(process.env.RUXIT_HOST_ID).to.be.defined;
+        // expect(process.env.RUXIT_CLUSTER_ID).to.be.defined;
+        expect(process.env.RUXIT_APPLICATIONID).to.equal('test-1');
+        expect(process.env.RUXIT_IGNOREDYNAMICPORT).to.be.defined;
+
+        expect(global._rx_cfg).to.be.defined;
+        done();
+    });
+});
+
 describe("Agent loader within Cloud Foundry VCAP_SERVICES['user-provided'] set", function () {
     this.timeout(15000);
 
