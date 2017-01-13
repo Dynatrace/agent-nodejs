@@ -135,7 +135,8 @@ function handleHeroku(options) {
     }
 
     process.env.DT_VOLATILEPROCESSGROUP = true;
-    process.env.RUXIT_IGNOREDYNAMICPORT = true; 
+    process.env.RUXIT_IGNOREDYNAMICPORT = true;
+ 
     return nodeagent(_agentOptions(options));
 }
 
