@@ -133,8 +133,10 @@ function handleHeroku(options) {
         process.env.RUXIT_CLUSTER_ID = process.env.HEROKU_APP_NAME;
         process.env.RUXIT_APPLICATIONID = process.env.HEROKU_APP_NAME;
     }
-    process.env.RUXIT_IGNOREDYNAMICPORT = true;
 
+    process.env.DT_VOLATILEPROCESSGROUP = true;
+    process.env.RUXIT_IGNOREDYNAMICPORT = true;
+ 
     return nodeagent(_agentOptions(options));
 }
 
