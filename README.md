@@ -29,7 +29,7 @@ try {
 try {
     require('@dynatrace/oneagent')({
         environmentid: '<environmentid>',
-        apitoken: '<apitoken>',
+        apitoken: '<PaaS token>',
     });
 } catch(err) {
     console.log(err.toString());

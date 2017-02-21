@@ -1,8 +1,21 @@
 'use strict';
 
-var fs = require('fs');
-var path = require('path');
-var request = require('sync-request');
+var stealthyRequire = require('stealthy-require');
+
+
+// Omit require cache before agent is loaded
+var request = stealthyRequire(require.cache, function () {
+    return require('sync-request');
+});
+
+var fs = stealthyRequire(require.cache, function () {
+    return require('fs');
+});
+
+var path = stealthyRequire(require.cache, function () {
+    return require('path');
+});
+
 var pathBase = null;
 var nodeagent = null;
 var debug = require('debug')('dynatrace')
