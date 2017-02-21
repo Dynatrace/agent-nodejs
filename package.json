@@ -7,14 +7,14 @@
     "url": "https://github.com/Dynatrace/agent-nodejs/issues"
   },
   "description": "Dynatrace node.js oneagent for PaaS environments.",
-   "keywords": [
-    "dynatrace", 
-    "node.js", 
-    "oneagent", 
-    "performance", 
-    "monitoring", 
-    "cloudfoundry", 
-    "heroku", 
+  "keywords": [
+    "dynatrace",
+    "node.js",
+    "oneagent",
+    "performance",
+    "monitoring",
+    "cloudfoundry",
+    "heroku",
     "bluemix",
     "ruxit",
     "paas",
@@ -34,10 +34,11 @@
   "devDependencies": {
     "chai": "^3.5.0"
   },
+  "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "debug": "^2.3.0",
     "dynatrace-oneagent-nodejs": "https://download.ruxit.com/agent/paas/Dynatrace-OneAgent-linux-nodejs-1.111.238.20170216-170230.tar.gz",
-    "superagent": "^2.3.0",
+    "stealthy-require": "^1.0.0",
     "sync-request": "^3.0.1"
   }
 }
