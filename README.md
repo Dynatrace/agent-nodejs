@@ -7,11 +7,11 @@ For any other environment please use the full installer provided in your Dynatra
 * [Sign up for free](https://www.dynatrace.com/trial/) and follow the instructions
 * Click on "Deploy Dynatrace"
 * Click on "Set up PaaS Integration"
-* Generate an API token
+* Generate a PaaS token
 * Run `$ npm install --save @dynatrace/oneagent` in your project directory
 
 ### Deploying Dynatrace to CloudFoundry
-* Set up the Dynatrace service broker using the credentials created in the previopus step as described in our [documentation](https://help.dynatrace.com/monitor-paas-environments/cloudfoundry/how-do-i-monitor-cloudfoundry/)
+* Set up the Dynatrace service broker using the credentials created in the previous step as described in our [documentation](https://help.dynatrace.com/monitor-paas-environments/cloudfoundry/how-do-i-monitor-cloudfoundry/)
 * As first statement of your application add 
 ```js
 try {
@@ -29,7 +29,7 @@ try {
 try {
     require('@dynatrace/oneagent')({
         environmentid: '<environmentid>',
-        apitoken: '<PaaS token>',
+        apitoken: '<paastoken>',
     });
 } catch(err) {
     console.log(err.toString());
