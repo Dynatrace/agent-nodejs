@@ -35,7 +35,7 @@ function _api_base_url(options) {
         debug('Using provided API url', options.apiurl);
         return options.apiurl;
     }
-    let base_url = options['endpoint'] || options['server'] || `https://${_tenant(options)}.live.dynatrace.com`;
+    var base_url = options['endpoint'] || options['server'] || 'https://' + _tenant(options) + '.live.dynatrace.com';
     return base_url.replace('/communication', '').replace(':8443', '').replace(':443', '') + '/api';
 
 }
@@ -49,7 +49,7 @@ function _credentials(options) {
 
     var uri = null;
 
-    uri = _api_base_url(options) + `/v1/deployment/installer/agent/connectioninfo?Api-Token=${options.apitoken}`;
+    uri = _api_base_url(options) + '/v1/deployment/installer/agent/connectioninfo?Api-Token=' + options.apitoken;
 
     debug('Trying to discover credentials from ', uri);
 
@@ -66,13 +66,13 @@ function _credentials(options) {
 }
 
 function _server(options) {
-    return options['endpoint'] || options['server'] || `https://${_tenant(options)}.live.dynatrace.com`;
+    return options['endpoint'] || options['server'] || 'https://' + _tenant(options) + '.live.dynatrace.com';
 }
 
 
 function _agentOptions(options) {
 
-    const credentials = _credentials(options);
+    var credentials = _credentials(options);
 
     return {
         server:  credentials.communicationEndpoints ? credentials.communicationEndpoints.join(';') : _server(options),
