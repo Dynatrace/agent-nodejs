@@ -1,6 +1,6 @@
 {
   "name": "@dynatrace/oneagent",
-  "version": "1.113.274-1.0.0+20170321-154808",
+  "version": "1.115.190-1.0.0+20170414-144911",
   "licence": "MIT",
   "repository": "Dynatrace/agent-nodejs",
   "bugs": {
@@ -37,7 +37,7 @@
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "debug": "^2.3.0",
-    "dynatrace-oneagent-nodejs": "https://download.ruxit.com/agent/paas/Dynatrace-OneAgent-linux-nodejs-1.113.274.20170321-154808.tar.gz",
+    "dynatrace-oneagent-nodejs": "https://download.ruxit.com/agent/paas/Dynatrace-OneAgent-linux-nodejs-1.115.190.20170414-144911.tar.gz",
     "stealthy-require": "^1.0.0",
     "sync-request": "^3.0.1"
   }
