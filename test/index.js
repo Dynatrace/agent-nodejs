@@ -3,7 +3,7 @@ var util = require('util');
 
 var testData = require('./data')
 
-
+/*
 describe('Agent loader outside of known PaaS env', function () {
     this.timeout(15000);
 
@@ -31,7 +31,7 @@ describe('Agent loader outside of known PaaS env', function () {
         }).to.throw(Error);
         done();
     });
-});
+});*/
 
 
 describe('Agent loader outside of known PaaS env using apitoken', function () {
@@ -63,7 +63,7 @@ describe('Agent loader outside of known PaaS env using apitoken', function () {
     });
 });
 
-
+/*
 describe("Agent loader within Cloud Foundry VCAP_SERVICES['ruxit'] set", function () {
     this.timeout(15000);
 
@@ -111,6 +111,7 @@ describe("Agent loader within Cloud Foundry VCAP_SERVICES['ruxit'] set", functio
         done();
     });
 });
+*/
 
 describe("Agent loader within Cloud Foundry VCAP_SERVICES['dynatrace-service'] set using apitoken", function () {
     this.timeout(15000);
@@ -209,6 +210,7 @@ describe("Agent loader within Cloud Foundry VCAP_SERVICES['dynatrace-service'] s
     });
 });
 
+/*
 describe("Agent loader within Cloud Foundry VCAP_SERVICES['user-provided'] set", function () {
     this.timeout(15000);
 
@@ -263,6 +265,8 @@ describe("Agent loader within Cloud Foundry VCAP_SERVICES['user-provided'] set",
         done();
     });
 });
+*/
+
 
 describe("Agent loader within Cloud Foundry VCAP_SERVICES['user-provided'] set using apitoken and tags", function () {
     this.timeout(15000);
@@ -317,5 +321,6 @@ describe("Agent loader within Cloud Foundry VCAP_SERVICES['user-provided'] set u
         expect(global._rx_cfg).to.be.defined;
         done();
     });
+
 
 });

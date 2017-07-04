@@ -39,6 +39,6 @@
     "debug": "^2.3.0",
     "dynatrace-oneagent-nodejs": "https://download.ruxit.com/agent/paas/Dynatrace-OneAgent-linux-nodejs-1.119.186.20170606-123122.tar.gz",
     "stealthy-require": "^1.0.0",
-    "sync-request": "^3.0.1"
+    "sync-request": "^4.1.0"
   }
 }

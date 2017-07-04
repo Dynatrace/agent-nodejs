@@ -48,12 +48,10 @@ function _credentials(options) {
     }
 
     var uri = null;
-
     uri = _api_base_url(options) + '/v1/deployment/installer/agent/connectioninfo?Api-Token=' + options.apitoken;
 
     debug('Trying to discover credentials from ', uri);
-
-    var res = request('GET', uri);
+    var res = request('GET', uri, {timeout: 5000, socketTimeout: 5000});
     var credentials = JSON.parse(res.getBody('utf8'));
 
     debug('Got credentials from ', uri);
