@@ -36,8 +36,8 @@
   },
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
+    "@dynatrace/oneagent-dependency": "^1.123.225",
     "debug": "^2.3.0",
-    "dynatrace-oneagent-nodejs": "https://download.ruxit.com/agent/paas/Dynatrace-OneAgent-linux-nodejs-1.123.225.20170801-194728.tar.gz",
     "stealthy-require": "^1.0.0",
     "sync-request": "^4.1.0"
   }

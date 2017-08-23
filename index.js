@@ -24,7 +24,7 @@ var defaultServer = 'live.dynatrace.com';
 
 
 
-var nodeagent = require('dynatrace-oneagent-nodejs');
+var nodeagent = require('@dynatrace/oneagent-dependency');
 
 function _tenant(options) {
     return options['environmentid'] || options['tenant'];
