@@ -76,7 +76,7 @@ function _agentOptions(options) {
         server:  credentials.communicationEndpoints ? credentials.communicationEndpoints.join(';') : _server(options),
         tenant: _tenant(options),
         tenanttoken: credentials.tenantToken || credentials.tenanttoken, //tenantToken comes from api, tenanttoken from cf-service
-        // loglevelcon: 'none'
+        loglevelcon: 'none'
     }
 }
 
