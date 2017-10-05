@@ -1,5 +1,7 @@
 'use strict';
 
+/* jshint node:true */
+
 var stealthyRequire = require('stealthy-require');
 
 
@@ -18,16 +20,13 @@ var path = stealthyRequire(require.cache, function () {
 
 var pathBase = null;
 var nodeagent = null;
-var debug = require('debug')('dynatrace')
+var debug = require('debug')('dynatrace');
 var defaultServer = 'live.dynatrace.com';
-
-
-
 
 var nodeagent = require('@dynatrace/oneagent-dependency');
 
 function _tenant(options) {
-    return options['environmentid'] || options['tenant'];
+    return options.environmentid || options.tenant;
 }
 
 function _api_base_url(options) {
@@ -35,7 +34,7 @@ function _api_base_url(options) {
         debug('Using provided API url', options.apiurl);
         return options.apiurl;
     }
-    var base_url = options['endpoint'] || options['server'] || 'https://' + _tenant(options) + '.live.dynatrace.com';
+    var base_url = options.endpoint || options.server || 'https://' + _tenant(options) + '.live.dynatrace.com';
     return base_url.replace('/communication', '').replace(':8443', '').replace(':443', '') + '/api';
 
 }
@@ -64,7 +63,7 @@ function _credentials(options) {
 }
 
 function _server(options) {
-    return options['endpoint'] || options['server'] || 'https://' + _tenant(options) + '.live.dynatrace.com';
+    return options.endpoint || options.server || 'https://' + _tenant(options) + '.live.dynatrace.com';
 }
 
 
@@ -73,11 +72,11 @@ function _agentOptions(options) {
     var credentials = _credentials(options);
 
     return {
-        server:  credentials.communicationEndpoints ? credentials.communicationEndpoints.join(';') : _server(options),
+        server: credentials.communicationEndpoints ? credentials.communicationEndpoints.join(';') : _server(options),
         tenant: _tenant(options),
-        tenanttoken: credentials.tenantToken || credentials.tenanttoken, //tenantToken comes from api, tenanttoken from cf-service
+        tenanttoken: credentials.tenantToken ||  credentials.tenanttoken, //tenantToken comes from api, tenanttoken from cf-service
         loglevelcon: 'none'
-    }
+    };
 }
 
 
@@ -151,7 +150,41 @@ function handleHeroku(options) {
     return nodeagent(_agentOptions(options));
 }
 
-module.exports = function agentLoader(options) {
+function handleAwsLambda() {
+    if (!process.env.DT_NODE_OPTIONS) {
+        debug('DT_NODE_OPTIONS not set.');
+    }
+
+    debug('initializing agent for habitat AWS.Lambda');
+    var createAgentResult = nodeagent({}, { habitat: "AWS.Lambda" });
+    if (createAgentResult && (createAgentResult.createAwsLambdaExportsInterceptor instanceof Function)) {
+        debug('creating interceptor object');
+        createAgentResult = createAgentResult.createAwsLambdaExportsInterceptor();
+    } else {
+        debug('agent does not support interceptor object');
+        throw new Error('agent does not support interceptor object');
+    }
+    return createAgentResult;
+}
+
+function isAwsLambda() {
+    /*
+     * check if Lambda and module has been required directly by lambda index.js (semi-automtic injection)
+     */
+    if (!process.env.AWS_LAMBDA_FUNCTION_NAME) {
+        return false;
+    }
+
+    debug('habitat is AWS Lambda');
+    var requiredByLambda = module.parent && module.parent.filename && module.parent.filename.indexOf("awslambda/index.js") >= 0;
+    if (!requiredByLambda) {
+        debug('agent has not been required from AWS Lambda directly' + (module.parent && module.parent.filename) ? module.parent.filename : "unknown");
+    }
+
+    return requiredByLambda;
+}
+
+function agentLoader(options) {
     if (!options) {
         if (process.env.VCAP_SERVICES && process.env.VCAP_APPLICATION) {
             var vcapObject = null;
@@ -176,9 +209,13 @@ module.exports = function agentLoader(options) {
         return handleHeroku(options);
     }
 
-
     debug('Using passed in options');
-
     return nodeagent(_agentOptions(options));
+}
 
-};
+if (!isAwsLambda()) {
+    module.exports = agentLoader;
+} else {
+    // export interceptor object
+    module.exports = handleAwsLambda();
+}
