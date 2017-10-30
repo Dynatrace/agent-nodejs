@@ -1,74 +1,53 @@
 'use strict';
 
-/* jshint node:true */
-
-var stealthyRequire = require('stealthy-require');
-
-
-// Omit require cache before agent is loaded
-var request = stealthyRequire(require.cache, function () {
-    return require('sync-request');
-});
-
-var fs = stealthyRequire(require.cache, function () {
-    return require('fs');
-});
-
-var path = stealthyRequire(require.cache, function () {
-    return require('path');
-});
-
-var pathBase = null;
-var nodeagent = null;
 var debug = require('debug')('dynatrace');
-var defaultServer = 'live.dynatrace.com';
-
 var nodeagent = require('@dynatrace/oneagent-dependency');
+var request = require('./lib/request');
+
+var defaultServer = '.live.dynatrace.com';
 
 function _tenant(options) {
     return options.environmentid || options.tenant;
 }
 
 function _api_base_url(options) {
-    if(options.apiurl) {
+    if (options.apiurl) {
         debug('Using provided API url', options.apiurl);
         return options.apiurl;
     }
-    var base_url = options.endpoint || options.server || 'https://' + _tenant(options) + '.live.dynatrace.com';
+    var base_url = options.endpoint || options.server || 'https://' + _tenant(options) + defaultServer;
     return base_url.replace('/communication', '').replace(':8443', '').replace(':443', '') + '/api';
-
 }
 
 function _credentials(options) {
-
     if (!options.environmentid || !options.apitoken) {
         debug('No API token found - using legacy authentication');
         return options;
     }
 
-    var uri = null;
-    uri = _api_base_url(options) + '/v1/deployment/installer/agent/connectioninfo?Api-Token=' + options.apitoken;
+    var uri = _api_base_url(options) + '/v1/deployment/installer/agent/connectioninfo?Api-Token=' + options.apitoken;
 
     debug('Trying to discover credentials from ', uri);
-    var res = request('GET', uri, {timeout: 5000, socketTimeout: 5000});
-    var credentials = JSON.parse(res.getBody('utf8'));
+    var res = request('GET', uri, { timeout: 5000, socketTimeout: 5000 });
+    if (res.statusCode < 200 || res.statusCode >= 300 || !res.body) {
+        debug('Failed fetching credentials from ', uri, ' statusCode: ', res.statusCode);
+        throw new Error('Failed fetching credentials from ' + uri);
+    }
 
     debug('Got credentials from ', uri);
-
+    var credentials = JSON.parse(res.body);
     if (!credentials) {
-        throw new Error("Error fetching tenant token from " + uri);
+        throw new Error('Error fetching tenant token from ' + uri);
     }
 
     return credentials;
 }
 
 function _server(options) {
-    return options.endpoint || options.server || 'https://' + _tenant(options) + '.live.dynatrace.com';
+    return options.endpoint || options.server || 'https://' + _tenant(options) + defaultServer;
 }
 
-
 function _agentOptions(options) {
-
     var credentials = _credentials(options);
 
     return {
@@ -79,10 +58,7 @@ function _agentOptions(options) {
     };
 }
 
-
-
 function _cfParseVcap(vcapServices) {
-    var credentials = null;
     var rgx = /dynatrace|ruxit/;
 
     var serviceProperties = Object.keys(vcapServices);
@@ -116,20 +92,19 @@ function _cfParseVcap(vcapServices) {
 }
 
 function handleCloudFoundry(vcapServices, vcapApplication) {
-
     debug('Cloud foundry environment detected.');
     process.env.RUXIT_APPLICATIONID = vcapApplication.application_name;
-    // process.env.RUXIT_CLUSTER_ID = vcapApplication.application_name;
     process.env.RUXIT_HOST_ID = vcapApplication.application_name + '_' + process.env.CF_INSTANCE_INDEX;
     process.env.RUXIT_IGNOREDYNAMICPORT = true;
     var credentials = _cfParseVcap(vcapServices);
-    if (!credentials) throw new Error("No credentials found in VCAP_SERVICES");
+    if (!credentials) {
+        throw new Error('No credentials found in VCAP_SERVICES');
+    }
 
     return nodeagent(_agentOptions(credentials));
 }
 
 function handleHeroku(options) {
-
     debug('Heroku environment detected.');
 
     // Dyno metadata is a labs feature and can be enabled via  
@@ -156,7 +131,7 @@ function handleAwsLambda() {
     }
 
     debug('initializing agent for habitat AWS.Lambda');
-    var createAgentResult = nodeagent({}, { habitat: "AWS.Lambda" });
+    var createAgentResult = nodeagent({}, { habitat: 'AWS.Lambda' });
     if (createAgentResult && (createAgentResult.createAwsLambdaExportsInterceptor instanceof Function)) {
         debug('creating interceptor object');
         createAgentResult = createAgentResult.createAwsLambdaExportsInterceptor();
@@ -176,9 +151,9 @@ function isAwsLambda() {
     }
 
     debug('habitat is AWS Lambda');
-    var requiredByLambda = module.parent && module.parent.filename && module.parent.filename.indexOf("awslambda/index.js") >= 0;
+    var requiredByLambda = module.parent && module.parent.filename && module.parent.filename.indexOf('awslambda/index.js') >= 0;
     if (!requiredByLambda) {
-        debug('agent has not been required from AWS Lambda directly' + (module.parent && module.parent.filename) ? module.parent.filename : "unknown");
+        debug('agent has not been required from AWS Lambda directly' + (module.parent && module.parent.filename) ? module.parent.filename : 'unknown');
     }
 
     return requiredByLambda;

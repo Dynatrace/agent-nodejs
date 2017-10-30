@@ -1,7 +1,7 @@
 {
   "name": "@dynatrace/oneagent",
-  "version": "1.125.216-1.0.2",
-  "licence": "MIT",
+  "version": "1.125.216-1.0.3",
+  "license": "MIT",
   "repository": "Dynatrace/agent-nodejs",
   "bugs": {
     "url": "https://github.com/Dynatrace/agent-nodejs/issues"
@@ -32,13 +32,12 @@
   },
   "author": "Dynatrace",
   "devDependencies": {
-    "chai": "^3.5.0"
+    "chai": "^4.1.2",
+    "jshint": "^2.9.5"
   },
-  "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "@dynatrace/oneagent-dependency": "1.125.216",
-    "debug": "^2.3.0",
-    "stealthy-require": "^1.0.0",
-    "sync-request": "^4.1.0"
+    "debug": "^3.1.0",
+    "then-request": "^4.1.0"
   }
 }

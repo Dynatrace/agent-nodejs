@@ -1,5 +1,6 @@
+.jshintrc
+.vscode
 logs
 *.log
 npm-debug.log*
-
 /test
