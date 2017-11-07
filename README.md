@@ -1,6 +1,6 @@
 # Dynatrace npm module for PaaS
 
-This module adds enterprise grade monitoring for Node.js in PaaS environments that aren't supported by a dedicated integration (e.g. Heroku). Before using this module, please [review the Dynatrace documentation](https://www.dynatrace.com/support/help/infrastructure/) to make sure that there isn't already a marketplace integration or buidlpack available for your platform.
+This module adds enterprise grade monitoring for Node.js in PaaS environments that aren't supported by a dedicated integration (e.g. Heroku). Before using this module, please [review the Dynatrace documentation](https://www.dynatrace.com/support/help/infrastructure/) to make sure that there isn't already a marketplace integration or buildpack available for your platform.
 
 ## Installation
 * [Sign up for free](https://www.dynatrace.com/trial/) and follow the instructions
