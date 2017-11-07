@@ -27,7 +27,7 @@ try {
 
 ### Deploying Dynatrace to CloudFoundry
 Starting with Dynatrace OneAgent 1.129 and [Cloud Foundry Node.js buildpack 1.6.10](https://github.com/cloudfoundry/nodejs-buildpack/releases/tag/v1.6.10) Dynatrace is part of the buildpack.
-Using the buildpack is preferable to the npm module approach due to several improvements. For instance, you're no longer required to install a dependency on @dynatrace/oneagent in your project directory. You also no longer need to add a require statement as the first statement of your application. Please review the [Dynatrace documentation](https://www.dynatrace.com/support/help/infrastructure/paas/how-do-i-monitor-cloud-foundry-applications/) to learn more.
+Using the buildpack is preferable to the npm module approach due to several improvements. For instance, you're no longer required to install a dependency on @dynatrace/oneagent in your project directory. You also no longer need to add a require statement as the first statement of your application. Please review the [Dynatrace product news](https://www.dynatrace.com/blog/support-for-node-js-apps-on-cloud-foundry-paas/) and [documentation](https://www.dynatrace.com/support/help/infrastructure/paas/how-do-i-monitor-cloud-foundry-applications/) to learn more.
 
 ## Disclaimer
 This module is supported by the Dynatrace Innovation Lab.
