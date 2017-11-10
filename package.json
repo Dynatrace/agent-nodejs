@@ -1,6 +1,6 @@
 {
   "name": "@dynatrace/oneagent",
-  "version": "1.129.145-1.0.0",
+  "version": "1.129.145-1.0.1",
   "license": "MIT",
   "repository": "Dynatrace/agent-nodejs",
   "bugs": {
