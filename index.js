@@ -126,9 +126,20 @@ function handleHeroku(options) {
 }
 
 function handleAwsLambda() {
-    if (!process.env.DT_NODE_OPTIONS) {
-        debug('DT_NODE_OPTIONS not set.');
+    var OS = require("os");
+
+    // accept both DT_LAMBDA_OPTIONS and DT_NODE_OPTIONS for agent options. Agent will accept options only in
+    // DT_NODE_OPTIONS
+    if (process.env.DT_LAMBDA_OPTIONS) {
+        debug('options defined with DT_LAMBDA_OPTIONS - re-routing to DT_NODE_OPTIONS');
+        process.env.DT_NODE_OPTIONS = process.env.DT_LAMBDA_OPTIONS;
+    } else if (!process.env.DT_NODE_OPTIONS) {
+        debug('DT_NODE_OPTIONS nor DT_LAMBDA_OPTIONS is set.');
     }
+
+    process.env.DT_NODE_ID = "" + OS.hostname();
+    process.env.DT_HOST_ID = process.env.AWS_LAMBDA_FUNCTION_NAME;
+    debug("set env DT_NODE_ID=" + process.env.DT_NODE_ID + ", DT_HOST_ID=" + process.env.DT_HOST_ID);
 
     debug('initializing agent for habitat AWS.Lambda');
     var createAgentResult = nodeagent({}, { habitat: 'AWS.Lambda' });
