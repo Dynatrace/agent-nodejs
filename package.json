@@ -21,7 +21,9 @@
     "pivotal",
     "hp helion",
     "atos",
-    "ge predix"
+    "ge predix",
+    "lambda",
+    "aws"
   ],
   "main": "index.js",
   "directories": {
@@ -39,5 +41,12 @@
     "@dynatrace/oneagent-dependency": "1.133.148",
     "debug": "^3.1.0",
     "then-request": "^4.1.0"
+  },
+  "bin": {
+    "dt-oneagent-tailor": "./lib/pkgtailor.js"
+  },
+  "engines": {
+    "node": ">=4",
+    "npm": ">=2"
   }
 }

@@ -126,7 +126,7 @@ function handleHeroku(options) {
 }
 
 function handleAwsLambda() {
-    var OS = require("os");
+    var OS = require('os');
 
     // accept both DT_LAMBDA_OPTIONS and DT_NODE_OPTIONS for agent options. Agent will accept options only in
     // DT_NODE_OPTIONS
