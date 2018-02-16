@@ -37,6 +37,7 @@ jspm_packages
 # Optional npm cache directory
 .npm
 .npmrc
+dynatrace-oneagent-*.tgz
 
 # Optional eslint cache
 .eslintcache
