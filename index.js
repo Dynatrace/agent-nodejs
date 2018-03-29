@@ -93,9 +93,8 @@ function _cfParseVcap(vcapServices) {
 
 function handleCloudFoundry(vcapServices, vcapApplication) {
     debug('Cloud foundry environment detected.');
-    process.env.RUXIT_APPLICATIONID = vcapApplication.application_name;
-    process.env.RUXIT_HOST_ID = vcapApplication.application_name + '_' + process.env.CF_INSTANCE_INDEX;
-    process.env.RUXIT_IGNOREDYNAMICPORT = true;
+    process.env.DT_APPLICATIONID = vcapApplication.application_name;
+    process.env.DT_IGNOREDYNAMICPORT = "true";
     var credentials = _cfParseVcap(vcapServices);
     if (!credentials) {
         throw new Error('No credentials found in VCAP_SERVICES');
@@ -112,15 +111,15 @@ function handleHeroku(options) {
     // s. https://devcenter.heroku.com/articles/dyno-metadata
 
     // Process group
-    // process.env.RUXIT_CLUSTER_ID = process.env.DYNO;
+    // process.env.DT_CLUSTER_ID = process.env.DYNO;
 
     if (process.env.HEROKU_APP_NAME) {
-        process.env.RUXIT_CLUSTER_ID = process.env.HEROKU_APP_NAME;
-        process.env.RUXIT_APPLICATIONID = process.env.HEROKU_APP_NAME;
+        process.env.DT_CLUSTER_ID = process.env.HEROKU_APP_NAME;
+        process.env.DT_APPLICATIONID = process.env.HEROKU_APP_NAME;
     }
 
-    process.env.DT_VOLATILEPROCESSGROUP = true;
-    process.env.RUXIT_IGNOREDYNAMICPORT = true;
+    process.env.DT_VOLATILEPROCESSGROUP = "true";
+    process.env.DT_IGNOREDYNAMICPORT = "true";
  
     return nodeagent(_agentOptions(options));
 }
