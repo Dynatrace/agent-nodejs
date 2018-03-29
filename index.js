@@ -137,6 +137,19 @@ function handleAwsLambda() {
         debug('DT_NODE_OPTIONS nor DT_LAMBDA_OPTIONS is set.');
     }
 
+    if (process.env.DT_NODE_OPTIONS) {
+        try {
+            var agentOptions = JSON.parse(process.env.DT_NODE_OPTIONS);
+            
+            // if not set, add loglevelcon to agent options
+            agentOptions.loglevelcon = agentOptions.loglevelcon || (debug.enabled ? 'info' : 'none');
+            process.env.DT_NODE_OPTIONS = JSON.stringify(agentOptions);
+            debug('added consoleloglevel to agent options: ' + process.env.DT_NODE_OPTIONS);
+        } catch (e) {
+            debug("failed to add loglevelcon to agent options ': " + process.env.DT_NODE_OPTIONS + "': " + e);
+        }
+    }    
+
     process.env.DT_NODE_ID = '' + OS.hostname();
     process.env.DT_HOST_ID = process.env.AWS_LAMBDA_FUNCTION_NAME;
     debug('set env DT_NODE_ID=' + process.env.DT_NODE_ID + ', DT_HOST_ID=' + process.env.DT_HOST_ID);
@@ -164,7 +177,7 @@ function isAwsLambda() {
     debug('habitat is AWS Lambda');
     var requiredByLambda = module.parent && module.parent.filename && module.parent.filename.indexOf('awslambda/index.js') >= 0;
     if (!requiredByLambda) {
-        debug('agent has not been required from AWS Lambda directly' + (module.parent && module.parent.filename) ? module.parent.filename : 'unknown');
+        debug('agent has not been required from AWS Lambda directly: ' + ((!module.parent || !module.parent.filename) ? 'unknown' : module.parent.filename));
     }
 
     return requiredByLambda;
