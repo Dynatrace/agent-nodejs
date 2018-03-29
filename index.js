@@ -6,6 +6,10 @@ var request = require('./lib/request');
 
 var defaultServer = '.live.dynatrace.com';
 
+function _consoleLogLevel() {
+    return debug.enabled ? 'info' : 'none';
+}
+
 function _tenant(options) {
     return options.environmentid || options.tenant;
 }
@@ -54,7 +58,7 @@ function _agentOptions(options) {
         server: credentials.communicationEndpoints ? credentials.communicationEndpoints.join(';') : _server(options),
         tenant: _tenant(options),
         tenanttoken: credentials.tenantToken ||  credentials.tenanttoken, //tenantToken comes from api, tenanttoken from cf-service
-        loglevelcon: 'none'
+        loglevelcon: _consoleLogLevel()
     };
 }
 
@@ -142,11 +146,11 @@ function handleAwsLambda() {
             var agentOptions = JSON.parse(process.env.DT_NODE_OPTIONS);
             
             // if not set, add loglevelcon to agent options
-            agentOptions.loglevelcon = agentOptions.loglevelcon || (debug.enabled ? 'info' : 'none');
+            agentOptions.loglevelcon = agentOptions.loglevelcon || _consoleLogLevel();
             process.env.DT_NODE_OPTIONS = JSON.stringify(agentOptions);
             debug('added consoleloglevel to agent options: ' + process.env.DT_NODE_OPTIONS);
         } catch (e) {
-            debug("failed to add loglevelcon to agent options ': " + process.env.DT_NODE_OPTIONS + "': " + e);
+            debug('failed to add loglevelcon to agent options ": ' + process.env.DT_NODE_OPTIONS + '": ' + e);
         }
     }    
 
@@ -177,7 +181,7 @@ function isAwsLambda() {
     debug('habitat is AWS Lambda');
     var requiredByLambda = module.parent && module.parent.filename && module.parent.filename.indexOf('awslambda/index.js') >= 0;
     if (!requiredByLambda) {
-        debug('agent has not been required from AWS Lambda directly: ' + ((!module.parent || !module.parent.filename) ? 'unknown' : module.parent.filename));
+        debug('agent has not been required from AWS Lambda directly: ' + ((module.parent && module.parent.filename) ? module.parent.filename : 'unknown'));
     }
 
     return requiredByLambda;
