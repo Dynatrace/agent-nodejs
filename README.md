@@ -1,6 +1,6 @@
 # Dynatrace npm module for PaaS
 
-This module adds enterprise grade monitoring for Node.js in PaaS environments that aren't supported by a dedicated integration (e.g. Heroku). Before using this module, please [review the Dynatrace documentation](https://www.dynatrace.com/support/help/infrastructure/) to make sure that there isn't already a marketplace integration or buildpack available for your platform.
+This module adds enterprise grade monitoring for Node.js in PaaS environments that aren't supported by a dedicated integration. Before using this module, please [review the Dynatrace documentation](https://www.dynatrace.com/support/help/cloud-platforms/) to make sure that there isn't already a marketplace integration or buildpack available for your platform.
 
 ## Installation
 * [Sign up for free](https://www.dynatrace.com/trial/) and follow the instructions
@@ -10,20 +10,7 @@ This module adds enterprise grade monitoring for Node.js in PaaS environments th
 * Run `$ npm install --save @dynatrace/oneagent` in your project directory
 
 ### Deploying Dynatrace to Heroku
-* Use the credentials created in the first step and add the following code block as first statement to your application
-
-```js
-try {
-  require('@dynatrace/oneagent')({
-    environmentid: '<environmentid>',
-    apitoken: '<paastoken>',
-  });
-} catch(err) {
-  console.log(err.toString());
-}
-```
-
-* Deploy the application to Heroku
+Starting with Dynatrace OneAgent 1.141, Dynatrace offers a dedicated buildpack for Heroku. Please refer to our [documentation](https://www.dynatrace.com/support/help/cloud-platforms/heroku/how-do-i-monitor-heroku-applications/) for further instructions. 
 
 ### Deploying Dynatrace to CloudFoundry
 Starting with Dynatrace OneAgent 1.131 and [Cloud Foundry Node.js buildpack 1.6.10](https://github.com/cloudfoundry/nodejs-buildpack/releases/tag/v1.6.10) Dynatrace is part of the buildpack.
