@@ -3,10 +3,11 @@
   "version": "1.145.163-1.0.0",
   "license": "MIT",
   "repository": "Dynatrace/agent-nodejs",
+  "homepage": "https://www.dynatrace.com/technologies/nodejs-monitoring/",
   "bugs": {
     "url": "https://github.com/Dynatrace/agent-nodejs/issues"
   },
-  "description": "Dynatrace node.js oneagent for PaaS environments.",
+  "description": "Dynatrace Node.js OneAgent for PaaS environments",
   "keywords": [
     "dynatrace",
     "node.js",
