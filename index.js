@@ -143,7 +143,7 @@ function handleAwsLambda() {
     if (process.env.DT_NODE_OPTIONS) {
         try {
             var agentOptions = JSON.parse(process.env.DT_NODE_OPTIONS);
-            
+
             // if not set, add loglevelcon to agent options
             agentOptions.loglevelcon = agentOptions.loglevelcon || _consoleLogLevel();
             process.env.DT_NODE_OPTIONS = JSON.stringify(agentOptions);
@@ -151,7 +151,7 @@ function handleAwsLambda() {
         } catch (e) {
             debug('failed to add loglevelcon to agent options ": ' + process.env.DT_NODE_OPTIONS + '": ' + e);
         }
-    }    
+    }
 
     process.env.DT_NODE_ID = '' + OS.hostname();
     process.env.DT_HOST_ID = process.env.AWS_LAMBDA_FUNCTION_NAME;
