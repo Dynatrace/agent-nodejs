@@ -170,7 +170,7 @@ function handleAwsLambda() {
 }
 
 function isAwsLambda() {
-    return typeof process.env.AWS_LAMBDA_FUNCTION_NAME === "string";
+    return (process.env.AWS_LAMBDA_FUNCTION_NAME != undefined) && (process.env.AWS_LAMBDA_FUNCTION_MEMORY_SIZE != undefined);
 }
 
 function agentLoader(options) {
