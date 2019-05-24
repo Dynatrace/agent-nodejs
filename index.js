@@ -170,20 +170,7 @@ function handleAwsLambda() {
 }
 
 function isAwsLambda() {
-    /*
-     * check if Lambda and module has been required directly by lambda index.js (semi-automtic injection)
-     */
-    if (!process.env.AWS_LAMBDA_FUNCTION_NAME) {
-        return false;
-    }
-
-    debug('habitat is AWS Lambda');
-    var requiredByLambda = module.parent && module.parent.filename && module.parent.filename.indexOf('awslambda/index.js') >= 0;
-    if (!requiredByLambda) {
-        debug('agent has not been required from AWS Lambda directly: ' + ((module.parent && module.parent.filename) ? module.parent.filename : 'unknown'));
-    }
-
-    return requiredByLambda;
+    return typeof process.env.AWS_LAMBDA_FUNCTION_NAME === "string";
 }
 
 function agentLoader(options) {
