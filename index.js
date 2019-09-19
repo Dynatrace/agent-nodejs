@@ -3,6 +3,7 @@
 var debug = require('debug')('dynatrace');
 var nodeagent = require('@dynatrace/oneagent-dependency');
 var request = require('./lib/request');
+var path = require('path');
 
 var defaultServer = '.live.dynatrace.com';
 
@@ -110,7 +111,7 @@ function handleCloudFoundry(vcapServices, vcapApplication) {
 function handleHeroku(options) {
     debug('Heroku environment detected.');
 
-    // Dyno metadata is a labs feature and can be enabled via  
+    // Dyno metadata is a labs feature and can be enabled via
     // $ heroku labs:enable runtime-dyno-metadata -a <app name>
     // s. https://devcenter.heroku.com/articles/dyno-metadata
 
@@ -124,8 +125,35 @@ function handleHeroku(options) {
 
     process.env.DT_VOLATILEPROCESSGROUP = "true";
     process.env.DT_IGNOREDYNAMICPORT = "true";
- 
+
     return nodeagent(_agentOptions(options));
+}
+
+/**
+ * transform handler received from DT_LAMBDA_HANDLER to module$export form
+ * encode Lambda style handler definition lib/index.foo.bar.myHandler to OneAgent proxy
+ * style lib/index$foo.bar.myHandler
+ *
+ * @param {string} handlerDef
+ */
+function encodeLambdaHandler(handlerDef) {
+    // decompose handler to module path, module file name and handler export
+
+    // lib/index.foo.bar.myHandler -> index.foo.bar.myHandler and lib/
+    var fileHandlerPart = path.basename(handlerDef);
+    var modulePath = handlerDef.substr(0, handlerDef.length - fileHandlerPart.length);
+
+    var splitted = fileHandlerPart.split('.');
+    var moduleFileName = splitted[0];
+
+    // rejoin property path to handler - foo.bar.myHandler
+    var exportPart = splitted.splice(1).join('.');
+
+    // transform handler to lib/index$foo.bar.myHandler
+    var encodedHandlerString = path.join(modulePath, `${moduleFileName}$${exportPart}`);
+
+    debug(`fileHandlerPart=${fileHandlerPart}, modulePath=${modulePath}, filePart=${moduleFileName}, exportPart=${exportPart}, encodedHandlerString=${encodedHandlerString}`);
+    return encodedHandlerString;
 }
 
 function handleAwsLambda() {
@@ -166,6 +194,16 @@ function handleAwsLambda() {
         debug('agent does not support interceptor object');
         throw new Error('agent does not support interceptor object');
     }
+
+    var handler = process.env.DT_LAMBDA_HANDLER;
+    debug(`DT_LAMBDA_HANDLER -> '${handler}'`)
+    if (handler != null) {
+        // trigger user handler loading through proxy with transformed handler definition
+        createAgentResult = {
+            handler: createAgentResult[encodeLambdaHandler(handler)]
+        };
+    }
+
     return createAgentResult;
 }
 
