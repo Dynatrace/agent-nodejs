@@ -5,6 +5,8 @@ var nodeagent = require('@dynatrace/oneagent-dependency');
 var request = require('./lib/request');
 var path = require('path');
 
+var LambdaUtil = require('./lib/LambdaUtil');
+
 var defaultServer = '.live.dynatrace.com';
 
 function _consoleLogLevel() {
@@ -129,33 +131,6 @@ function handleHeroku(options) {
     return nodeagent(_agentOptions(options));
 }
 
-/**
- * transform handler received from DT_LAMBDA_HANDLER to module$export form
- * encode Lambda style handler definition lib/index.foo.bar.myHandler to OneAgent proxy
- * style lib/index$foo.bar.myHandler
- *
- * @param {string} handlerDef
- */
-function encodeLambdaHandler(handlerDef) {
-    // decompose handler to module path, module file name and handler export
-
-    // lib/index.foo.bar.myHandler -> index.foo.bar.myHandler and lib/
-    var fileHandlerPart = path.basename(handlerDef);
-    var modulePath = handlerDef.substr(0, handlerDef.length - fileHandlerPart.length);
-
-    var splitted = fileHandlerPart.split('.');
-    var moduleFileName = splitted[0];
-
-    // rejoin property path to handler - foo.bar.myHandler
-    var exportPart = splitted.splice(1).join('.');
-
-    // transform handler to lib/index$foo.bar.myHandler
-    var encodedHandlerString = path.join(modulePath, `${moduleFileName}$${exportPart}`);
-
-    debug(`fileHandlerPart=${fileHandlerPart}, modulePath=${modulePath}, filePart=${moduleFileName}, exportPart=${exportPart}, encodedHandlerString=${encodedHandlerString}`);
-    return encodedHandlerString;
-}
-
 function handleAwsLambda() {
     var OS = require('os');
 
@@ -195,12 +170,11 @@ function handleAwsLambda() {
         throw new Error('agent does not support interceptor object');
     }
 
-    var handler = process.env.DT_LAMBDA_HANDLER;
-    debug(`DT_LAMBDA_HANDLER -> '${handler}'`)
-    if (handler != null) {
-        // trigger user handler loading through proxy with transformed handler definition
+    var dtLambdaHandler = process.env.DT_LAMBDA_HANDLER;
+    debug(`DT_LAMBDA_HANDLER -> '${dtLambdaHandler}'`)
+    if (dtLambdaHandler != null) {
         createAgentResult = {
-            handler: createAgentResult[encodeLambdaHandler(handler)]
+            handler: LambdaUtil.resolveUserHandlerFromDtLambdaHandler(createAgentResult, dtLambdaHandler)
         };
     }
 
