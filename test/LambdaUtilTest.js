@@ -1,6 +1,7 @@
 const Sinon = require("sinon");
 const Assert = require('assert');
 const debug = require('debug');
+const Path = require('path');
 const LambdaUtil = require('../lib/LambdaUtil');
 
 describe("LambdaUtil", () => {
@@ -29,17 +30,19 @@ describe("LambdaUtil", () => {
 	});
 
 	function decompose(handlerDef, expectedModuleFilePath, expectedExportPath) {
-		const result = LambdaUtil.decomposeHandlerDef(handlerDef);
+		it(handlerDef, () => {
+			const result = LambdaUtil.decomposeHandlerDef(handlerDef);
 
-		Assert.strictEqual(result.moduleFilePath, expectedModuleFilePath, handlerDef);
-		Assert.deepEqual(result.exportPathArray, expectedExportPath);
+			Assert.strictEqual(result.moduleFilePath, expectedModuleFilePath, handlerDef);
+			Assert.deepEqual(result.exportPathArray, expectedExportPath);
+		});
 	}
 
-	it("decomposeHandlerDef", () => {
+	describe("decomposeHandlerDef", () => {
 		decompose("index.handler", "index", ["handler"]);
-		decompose("lib/index.handler", "lib/index", ["handler"]);
+		decompose("lib/index.handler", Path.join("lib", "index"), ["handler"]);
 		decompose("index.foo.handler", "index", ["foo", "handler"]);
-		decompose("lib/index.foo.bar.handler", "lib/index", ["foo", "bar", "handler"]);
+		decompose("lib/index.foo.bar.handler", Path.join("lib", "index"), ["foo", "bar", "handler"]);
 	});
 
 	function resolveUserHandler(handlerDef) {
