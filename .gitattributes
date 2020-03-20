@@ -1,0 +1,10 @@
+# This tells Git not to attempt any end-of-line conversion upon checkin or checkout.
+*                               -text
+
+*.js                            text eol=lf
+*.md                            text eol=lf
+*.json                          text eol=lf
+*.npm*                          text eol=lf
+*.git*                          text eol=lf
+LICENSE                         text eol=lf
+/lib/pkgtailor-state            text eol=lf
