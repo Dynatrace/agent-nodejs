@@ -32,19 +32,19 @@ function _credentials(options) {
         return options;
     }
 
-    var uri = _api_base_url(options) + '/v1/deployment/installer/agent/connectioninfo?Api-Token=' + options.apitoken;
+    var baseUrl = _api_base_url(options) + '/v1/deployment/installer/agent/connectioninfo';
+    debug('Trying to discover credentials from ', baseUrl);
 
-    debug('Trying to discover credentials from ', uri);
-    var res = request('GET', uri, { timeout: 5000, socketTimeout: 5000 });
+    var res = request('GET', baseUrl + "?Api-Token=" + options.apitoken, { timeout: 5000, socketTimeout: 5000 });
     if (res.statusCode < 200 || res.statusCode >= 300 || !res.body) {
-        debug('Failed fetching credentials from ', uri, ' statusCode: ', res.statusCode);
-        throw new Error('Failed fetching credentials from ' + uri);
+        debug('Failed fetching credentials, statusCode: ', res.statusCode);
+        throw new Error('Failed fetching credentials from ' + baseUrl);
     }
 
-    debug('Got credentials from ', uri);
+    debug('Got credentials');
     var credentials = JSON.parse(res.body);
     if (!credentials) {
-        throw new Error('Error fetching tenant token from ' + uri);
+        throw new Error('Error fetching tenant token from ' + baseUrl);
     }
 
     return credentials;
@@ -150,9 +150,9 @@ function handleAwsLambda() {
             // if not set, add loglevelcon to agent options
             agentOptions.loglevelcon = agentOptions.loglevelcon || _consoleLogLevel();
             process.env.DT_NODE_OPTIONS = JSON.stringify(agentOptions);
-            debug('added consoleloglevel to agent options: ' + process.env.DT_NODE_OPTIONS);
+            debug('added consoleloglevel to agent options');
         } catch (e) {
-            debug('failed to add loglevelcon to agent options ": ' + process.env.DT_NODE_OPTIONS + '": ' + e);
+            debug('failed to add loglevelcon to agent options: ' + e.stack);
         }
     }
 
