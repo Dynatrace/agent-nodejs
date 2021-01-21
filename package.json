@@ -1,6 +1,6 @@
 {
   "name": "@dynatrace/oneagent",
-  "version": "1.207.233-1.0.0",
+  "version": "1.207.237-1.0.0",
   "license": "MIT",
   "repository": "Dynatrace/agent-nodejs",
   "homepage": "https://www.dynatrace.com/technologies/nodejs-monitoring/",
@@ -42,7 +42,7 @@
     "sinon": "^9.2.3"
   },
   "dependencies": {
-    "@dynatrace/oneagent-dependency": "1.207.233",
+    "@dynatrace/oneagent-dependency": "1.207.237",
     "debug": "^4.3.1",
     "then-request": "^6.0.2"
   },
