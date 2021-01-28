@@ -20,10 +20,14 @@ try {
     apitoken: '<paastoken>',
     endpoint: '<endpoint url>' // specify endpoint url - not needed for SaaS customers
   });
-} catch(err) {
-  console.log('Failed to load OneAgent: ' + err);
+} catch (err) {
+  console.log('Failed to load OneAgent: ', err);
 }
 ```
+
+### Deploying Dynatrace to AWS Lambda
+
+Starting with Dynatrace OneAgent 1.207, Dynatrace offers a dedicated AWS Lambda layer to monitor Node.js based AWS Lambda functions. Please review the [Dynatrace product news](https://www.dynatrace.com/news/blog/dynatrace-extends-distributed-tracing-for-serverless-on-aws-lambda/) and [documentation](https://www.dynatrace.com/support/help/technology-support/cloud-platforms/amazon-web-services/integrations/deploy-oneagent-as-lambda-extension/) to learn more.
 
 ### Deploying Dynatrace to Heroku
 

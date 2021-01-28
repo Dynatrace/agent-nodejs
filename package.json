@@ -14,17 +14,11 @@
     "oneagent",
     "performance",
     "monitoring",
-    "cloudfoundry",
-    "heroku",
     "bluemix",
-    "ruxit",
     "paas",
-    "pivotal",
     "hp helion",
     "atos",
-    "ge predix",
-    "lambda",
-    "aws"
+    "ge predix"
   ],
   "main": "index.js",
   "directories": {
