@@ -43,6 +43,10 @@ Please review the [Dynatrace product news](https://www.dynatrace.com/blog/suppor
 and [documentation](https://www.dynatrace.com/support/help/infrastructure/paas/how-do-i-monitor-cloud-foundry-applications/)
 to learn more.
 
+### Emitting debug output
+
+To enable debug output set the `DEBUG` environment variable to `dynatrace*`. For more detail see the [debug module documentation](https://www.npmjs.com/package/debug).
+
 ## Licence
 
 Licensed under the MIT License. See the LICENSE file for details.
