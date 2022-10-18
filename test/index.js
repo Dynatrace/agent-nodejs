@@ -1,5 +1,4 @@
 var expect = require('chai').expect;
-var util = require('util');
 
 var testData;
 try {

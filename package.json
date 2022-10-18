@@ -1,55 +1,55 @@
 {
-  "name": "@dynatrace/oneagent",
-  "version": "1.249.201-1.0.0",
-  "license": "MIT",
-  "repository": "Dynatrace/agent-nodejs",
-  "homepage": "https://www.dynatrace.com/technologies/nodejs-monitoring/",
-  "bugs": {
-    "url": "https://github.com/Dynatrace/agent-nodejs/issues"
-  },
-  "description": "Dynatrace Node.js OneAgent for PaaS environments",
-  "keywords": [
-    "dynatrace",
-    "node.js",
-    "oneagent",
-    "performance",
-    "monitoring",
-    "bluemix",
-    "paas",
-    "hp helion",
-    "atos",
-    "ge predix"
-  ],
-  "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "prepublishOnly": "npm test",
-    "test": "mocha"
-  },
-  "author": "Dynatrace",
-  "devDependencies": {
-    "chai": "^4.3.6",
-    "jshint": "^2.13.5",
-    "mocha": "^10.0.0",
-    "sinon": "^14.0.0"
-  },
-  "dependencies": {
-    "@dynatrace/oneagent-dependency": "1.249.201",
-    "debug": "^4.3.4",
-    "then-request": "^6.0.2"
-  },
-  "bin": {
-    "dt-oneagent-tailor": "./lib/pkgtailor.js"
-  },
-  "engines": {
-    "node": ">=10",
-    "npm": ">=5"
-  },
-  "Dynatrace": {
-    "Features": {
-      "DtLambdaHandler": "true"
-    }
-  }
+	"name": "@dynatrace/oneagent",
+	"version": "1.251.220-1.0.0",
+	"license": "MIT",
+	"repository": "Dynatrace/agent-nodejs",
+	"homepage": "https://www.dynatrace.com/technologies/nodejs-monitoring/",
+	"bugs": {
+		"url": "https://github.com/Dynatrace/agent-nodejs/issues"
+	},
+	"description": "Dynatrace Node.js OneAgent for PaaS environments",
+	"keywords": [
+		"dynatrace",
+		"node.js",
+		"oneagent",
+		"performance",
+		"monitoring",
+		"bluemix",
+		"paas",
+		"hp helion",
+		"atos",
+		"ge predix"
+	],
+	"main": "index.js",
+	"directories": {
+		"test": "test"
+	},
+	"scripts": {
+		"prepublishOnly": "npm test",
+		"test": "mocha"
+	},
+	"author": "Dynatrace",
+	"devDependencies": {
+		"chai": "^4.3.6",
+		"jshint": "^2.13.5",
+		"mocha": "^10.0.0",
+		"sinon": "^14.0.0"
+	},
+	"dependencies": {
+		"@dynatrace/oneagent-dependency": "1.251.220",
+		"debug": "^4.3.4",
+		"then-request": "^6.0.2"
+	},
+	"bin": {
+		"dt-oneagent-tailor": "./lib/pkgtailor.js"
+	},
+	"engines": {
+		"node": ">=10",
+		"npm": ">=5"
+	},
+	"Dynatrace": {
+		"Features": {
+			"DtLambdaHandler": "true"
+		}
+	}
 }
