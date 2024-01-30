@@ -1,8 +1,11 @@
 {
 	"name": "@dynatrace/oneagent",
-	"version": "1.279.162-1.0.0",
+	"version": "1.281.161-1.0.0",
 	"license": "MIT",
-	"repository": "Dynatrace/agent-nodejs",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Dynatrace/agent-nodejs.git"
+	},
 	"homepage": "https://www.dynatrace.com/technologies/nodejs-monitoring/",
 	"bugs": {
 		"url": "https://github.com/Dynatrace/agent-nodejs/issues"
@@ -30,18 +33,18 @@
 	},
 	"author": "Dynatrace",
 	"devDependencies": {
-		"chai": "^4.3.7",
+		"chai": "^4.4.1",
 		"jshint": "^2.13.6",
 		"mocha": "^10.2.0",
-		"sinon": "^15.1.2"
+		"sinon": "^17.0.1"
 	},
 	"dependencies": {
-		"@dynatrace/oneagent-dependency": "1.279.162",
+		"@dynatrace/oneagent-dependency": "1.281.161",
 		"debug": "^4.3.4",
 		"then-request": "^6.0.2"
 	},
 	"bin": {
-		"dt-oneagent-tailor": "./lib/pkgtailor.js"
+		"dt-oneagent-tailor": "lib/pkgtailor.js"
 	},
 	"engines": {
 		"node": ">=10",
