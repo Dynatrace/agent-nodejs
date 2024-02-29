@@ -2,11 +2,47 @@ var expect = require('chai').expect;
 
 var testData;
 try {
-    testData = require('./data')
+    testData = require('./data');
 } catch (e) {
     // running w/o test data
 }
 
+/**
+ * Testcases independent from testData
+ */
+describe('Agent loader integrity tests', function () {
+	this.timeout(15000);
+
+	const cTestData = {
+		server: 'localhost',
+		tenant: 'abc12345',
+		environmentid: 'diy98765',
+		apitoken: 'gYl3QptwQYGpE',
+		endpoint: 'https://test_endpoint.dynatracelabs.com'
+	};
+
+	/**
+	 * test must not throw an 'Invalid URL' exception
+	 */
+	it('test baseUrl validity', function (done) {
+		try {
+			require('../index')({
+				environmentid: cTestData.environmentid,
+				apitoken: cTestData.apitoken,
+				endpoint: cTestData.endpoint
+			});
+		} catch (err) {
+			// ENOTFOUND is expected here
+			let endpoint = cTestData.endpoint.replace('https://', '');
+			expect(err).to.eql(new Error('getaddrinfo ENOTFOUND ' + endpoint));
+		}
+		done();
+	});
+});
+
+/**
+ * Testcases depending on testData
+ */
 if (testData != null) {
     /*
     describe('Agent loader outside of known PaaS env', function () {
@@ -46,8 +82,7 @@ if (testData != null) {
                 server: testData.server,
                 tenant: testData.environmentid,
                 apitoken: testData.apitoken
-            }
-            );
+            });
 
             expect(process.env.RUXIT_HOST_ID).to.not.be.defined;
             expect(process.env.RUXIT_CLUSTER_ID).to.not.be.defined;
@@ -120,7 +155,6 @@ if (testData != null) {
     describe("Agent loader within Cloud Foundry VCAP_SERVICES['dynatrace-service'] set using apitoken", function () {
         this.timeout(15000);
 
-
         it("should set global and environment variables", function (done) {
             var vcapServices = {
                 'dynatrace-service': [{
@@ -148,10 +182,8 @@ if (testData != null) {
             };
 
             process.env.VCAP_APPLICATION = JSON.stringify(vcapApplication);
-
             process.env.VCAP_SERVICES = JSON.stringify(vcapServices);
             process.env.CF_INSTANCE_INDEX = 1;
-
 
             require('../index')();
 
@@ -271,7 +303,6 @@ if (testData != null) {
     });
     */
 
-
     describe("Agent loader within Cloud Foundry VCAP_SERVICES['user-provided'] set using apitoken and tags", function () {
         this.timeout(15000);
 
@@ -313,8 +344,6 @@ if (testData != null) {
             process.env.CF_INSTANCE_INDEX = 2;
             process.env.VCAP_SERVICES = JSON.stringify(vcapServices);
 
-
-
             require('../index')();
 
             expect(process.env.RUXIT_HOST_ID).to.be.defined;
@@ -325,7 +354,5 @@ if (testData != null) {
             expect(global._rx_cfg).to.be.defined;
             done();
         });
-
-
     });
 }

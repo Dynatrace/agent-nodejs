@@ -4,8 +4,6 @@ var debug = require('debug')('dynatrace');
 var nodeagent = require('@dynatrace/oneagent-dependency');
 var request = require('./lib/request');
 
-var LambdaUtil = require('./lib/LambdaUtil');
-
 var defaultServer = '.live.dynatrace.com';
 
 function _consoleLogLevel() {
@@ -32,7 +30,7 @@ function _credentials(options) {
     }
 
     var baseUrl = _api_base_url(options) + '/v1/deployment/installer/agent/connectioninfo';
-    debug('Trying to discover credentials from ', baseUrl);
+    debug('Trying to discover credentials from:', baseUrl);
 
     var res = request('GET', baseUrl + "?Api-Token=" + options.apitoken, { timeout: 5000, socketTimeout: 5000 });
     if (res.statusCode < 200 || res.statusCode >= 300 || !res.body) {
@@ -40,12 +38,16 @@ function _credentials(options) {
         throw new Error('Failed fetching credentials from ' + baseUrl);
     }
 
-    debug('Got credentials');
-    var credentials = JSON.parse(res.body);
+    var credentials;
+    try {
+        credentials = JSON.parse(res.body);
+    } catch (e) {
+        throw new Error('Error parsing response from ' + baseUrl + ': ' + e);
+    }
     if (!credentials) {
         throw new Error('Error fetching tenant token from ' + baseUrl);
     }
-
+    debug('Got credentials from:', baseUrl);
     return credentials;
 }
 
@@ -130,56 +132,6 @@ function handleHeroku(options) {
     return nodeagent(_agentOptions(options));
 }
 
-function handleAwsLambda() {
-    var OS = require('os');
-
-    // accept both DT_LAMBDA_OPTIONS and DT_NODE_OPTIONS for agent options. Agent will accept options only in
-    // DT_NODE_OPTIONS
-    if (process.env.DT_LAMBDA_OPTIONS) {
-        debug('options defined with DT_LAMBDA_OPTIONS - re-routing to DT_NODE_OPTIONS');
-        process.env.DT_NODE_OPTIONS = process.env.DT_LAMBDA_OPTIONS;
-    } else if (!process.env.DT_NODE_OPTIONS) {
-        debug('DT_NODE_OPTIONS nor DT_LAMBDA_OPTIONS is set.');
-    }
-
-    if (process.env.DT_NODE_OPTIONS) {
-        try {
-            var agentOptions = JSON.parse(process.env.DT_NODE_OPTIONS);
-
-            // if not set, add loglevelcon to agent options
-            agentOptions.loglevelcon = agentOptions.loglevelcon || _consoleLogLevel();
-            process.env.DT_NODE_OPTIONS = JSON.stringify(agentOptions);
-            debug('added consoleloglevel to agent options');
-        } catch (e) {
-            debug('failed to add loglevelcon to agent options: ' + e.stack);
-        }
-    }
-
-    process.env.DT_NODE_ID = '' + OS.hostname();
-    process.env.DT_HOST_ID = process.env.AWS_LAMBDA_FUNCTION_NAME;
-    debug('set env DT_NODE_ID=' + process.env.DT_NODE_ID + ', DT_HOST_ID=' + process.env.DT_HOST_ID);
-
-    debug('initializing agent for habitat AWS.Lambda');
-    var createAgentResult = nodeagent({}, { habitat: 'AWS.Lambda' });
-    if (createAgentResult && (createAgentResult.createAwsLambdaExportsInterceptor instanceof Function)) {
-        debug('creating interceptor object');
-        createAgentResult = createAgentResult.createAwsLambdaExportsInterceptor();
-    } else {
-        debug('agent does not support interceptor object');
-        throw new Error('agent does not support interceptor object');
-    }
-
-    var dtLambdaHandler = process.env.DT_LAMBDA_HANDLER;
-    debug(`DT_LAMBDA_HANDLER -> '${dtLambdaHandler}'`)
-    if (dtLambdaHandler != null) {
-        createAgentResult = {
-            handler: LambdaUtil.resolveUserHandlerFromDtLambdaHandler(createAgentResult, dtLambdaHandler)
-        };
-    }
-
-    return createAgentResult;
-}
-
 function isAwsLambda() {
     return (process.env.AWS_LAMBDA_FUNCTION_NAME != undefined) && (process.env.AWS_LAMBDA_FUNCTION_MEMORY_SIZE != undefined);
 }
@@ -216,6 +168,5 @@ function agentLoader(options) {
 if (!isAwsLambda()) {
     module.exports = agentLoader;
 } else {
-    // export interceptor object
-    module.exports = handleAwsLambda();
+    throw new Error('AWS Lambda is not support by this package');
 }
