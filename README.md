@@ -30,7 +30,7 @@ try {
 
 To enable debug output set the `DEBUG` environment variable to `dynatrace*`. For more detail see the [debug module documentation](https://www.npmjs.com/package/debug).
 
-## Deployment {#deployment}
+## Deployment
 
 ### Deploying Dynatrace to AWS Lambda
 
