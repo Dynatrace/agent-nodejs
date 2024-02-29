@@ -4,7 +4,7 @@ This module adds enterprise grade monitoring for Node.js in PaaS environments th
 Before using this module, please [review the Dynatrace documentation](https://www.dynatrace.com/support/help/setup-and-configuration/setup-on-cloud-platforms) to
 make sure that there isn't already a marketplace integration or buildpack available for your platform.
 
-> Note: This module will be deprecated and supported not later than May, 31<sup>st</sup> 2024. Latest supported version of OneAgent will be 1.291. For a migration path please refer to the [Deployment](#Deployment) section below.
+> Note: This module will be deprecated and supported not later than May, 31<sup>st</sup> 2024. Latest supported version of OneAgent will be 1.291. For a migration path please refer to the [Deployment](#deployment) section below.
 
 ## Installation
 
@@ -30,7 +30,7 @@ try {
 
 To enable debug output set the `DEBUG` environment variable to `dynatrace*`. For more detail see the [debug module documentation](https://www.npmjs.com/package/debug).
 
-## Deployment {#Deployment}
+## Deployment {#deployment}
 
 ### Deploying Dynatrace to AWS Lambda
 
