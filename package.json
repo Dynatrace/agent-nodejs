@@ -1,6 +1,6 @@
 {
 	"name": "@dynatrace/oneagent",
-	"version": "1.289.141-1.0.0",
+	"version": "1.291.121-1.0.0",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
@@ -35,12 +35,12 @@
 	"devDependencies": {
 		"chai": "^4.4.1",
 		"jshint": "^2.13.6",
-		"mocha": "^10.3.0",
-		"sinon": "^17.0.1"
+		"mocha": "^10.4.0",
+		"sinon": "^18.0.0"
 	},
 	"dependencies": {
-		"@dynatrace/oneagent-dependency": "1.289.141",
-		"debug": "^4.3.4",
+		"@dynatrace/oneagent-dependency": "1.291.121",
+		"debug": "^4.3.5",
 		"then-request": "^6.0.2"
 	},
 	"bin": {
