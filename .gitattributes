@@ -7,4 +7,3 @@
 *.npm*                          text eol=lf
 *.git*                          text eol=lf
 LICENSE                         text eol=lf
-/lib/pkgtailor-state            text eol=lf

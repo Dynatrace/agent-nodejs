@@ -1,6 +1,6 @@
 {
 	"name": "@dynatrace/oneagent",
-	"version": "1.293.144-1.0.0",
+	"version": "1.295.65-1.0.0",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
@@ -17,11 +17,7 @@
 		"oneagent",
 		"performance",
 		"monitoring",
-		"bluemix",
-		"paas",
-		"hp helion",
-		"atos",
-		"ge predix"
+		"paas"
 	],
 	"main": "index.js",
 	"directories": {
@@ -35,16 +31,12 @@
 	"devDependencies": {
 		"chai": "^4.4.1",
 		"jshint": "^2.13.6",
-		"mocha": "^10.4.0",
+		"mocha": "^10.6.0",
 		"sinon": "^18.0.0"
 	},
 	"dependencies": {
-		"@dynatrace/oneagent-dependency": "1.293.144",
-		"debug": "^4.3.5",
-		"then-request": "^6.0.2"
-	},
-	"bin": {
-		"dt-oneagent-tailor": "lib/pkgtailor.js"
+		"@dynatrace/oneagent-dependency": "1.295.65",
+		"debug": "^4.3.5"
 	},
 	"engines": {
 		"node": ">=12",
