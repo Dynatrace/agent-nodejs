@@ -61,7 +61,7 @@ function _agentOptions(options) {
     return {
         server: credentials.communicationEndpoints ? credentials.communicationEndpoints.join(';') : _server(options),
         tenant: _tenant(options),
-        tenanttoken: credentials.tenantToken ||  credentials.tenanttoken, //tenantToken comes from api, tenanttoken from cf-service
+        tenanttoken: credentials.tenantToken ||  credentials.tenanttoken, // tenantToken comes from api, tenanttoken from cf-service
         loglevelcon: _consoleLogLevel()
     };
 }
