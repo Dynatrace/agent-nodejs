@@ -66,7 +66,6 @@ if (testData != null) {
         });
 
         it('should throw with no credentials given', function (done) {
-
             expect(function () {
                 require('../index')()
             }).to.throw(Error);
@@ -84,17 +83,16 @@ if (testData != null) {
                 apitoken: testData.apitoken
             });
 
-            expect(process.env.RUXIT_HOST_ID).to.not.be.defined;
-            expect(process.env.RUXIT_CLUSTER_ID).to.not.be.defined;
-            expect(process.env.RUXIT_APPLICATIONID).to.not.be.defined;
-            expect(process.env.RUXIT_IGNOREDYNAMICPORT).to.not.be.defined;
-            expect(global._rx_cfg).to.be.defined;
+            expect(process.env.RUXIT_HOST_ID).to.be.undefined;
+            expect(process.env.RUXIT_CLUSTER_ID).to.be.undefined;
+            expect(process.env.RUXIT_APPLICATIONID).to.be.undefined;
+            expect(process.env.RUXIT_IGNOREDYNAMICPORT).to.be.undefined;
+            expect(global._rx_cfg).not.to.be.undefined;
 
             done();
         });
 
         it('should throw with no credentials given', function (done) {
-
             expect(function () {
                 require('../index')()
             }).to.throw(Error);
