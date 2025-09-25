@@ -1,6 +1,6 @@
 {
 	"name": "@dynatrace/oneagent",
-	"version": "1.319.63-1.0.1",
+	"version": "1.321.63-1.0.0",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
@@ -33,7 +33,7 @@
 		"mocha": "11.7.2"
 	},
 	"dependencies": {
-		"@dynatrace/oneagent-dependency": "1.319.63",
+		"@dynatrace/oneagent-dependency": "1.321.63",
 		"debug": "^4.4.3"
 	},
 	"engines": {
