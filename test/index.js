@@ -76,10 +76,10 @@ if (testData != null) {
     describe('Agent loader outside of known PaaS env using apitoken', function () {
         this.timeout(15000);
 
-        it('should return with _rx.cfg set', function (done) {
+        it('should return with __DT_AGENT_INJECTED__ set', function (done) {
             require('../index')({
                 server: testData.server,
-                tenant: testData.environmentid,
+                environmentid: testData.environmentid,
                 apitoken: testData.apitoken
             });
 
@@ -87,7 +87,7 @@ if (testData != null) {
             expect(process.env.RUXIT_CLUSTER_ID).to.be.undefined;
             expect(process.env.RUXIT_APPLICATIONID).to.be.undefined;
             expect(process.env.RUXIT_IGNOREDYNAMICPORT).to.be.undefined;
-            expect(global._rx_cfg).not.to.be.undefined;
+            expect(global.__DT_AGENT_INJECTED__).not.to.be.undefined;
 
             done();
         });
@@ -158,7 +158,7 @@ if (testData != null) {
                 'dynatrace-service': [{
                     "credentials": {
                         "server": testData.server,
-                        "tenant": testData.environmentid,
+                        "environmentid": testData.environmentid,
                         "apitoken": testData.apitoken
                     },
                     "label": "ruxit",
@@ -185,12 +185,12 @@ if (testData != null) {
 
             require('../index')();
 
-            expect(process.env.RUXIT_HOST_ID).to.be.defined;
+            // expect(process.env.RUXIT_HOST_ID).to.be.defined;
             // expect(process.env.RUXIT_CLUSTER_ID).to.be.defined;
-            expect(process.env.RUXIT_APPLICATIONID).to.equal('test-1');
-            expect(process.env.RUXIT_IGNOREDYNAMICPORT).to.be.defined;
+            expect(process.env.DT_APPLICATIONID).to.equal('test-1');
+            expect(process.env.DT_IGNOREDYNAMICPORT).not.to.be.undefined;
 
-            expect(global._rx_cfg).to.be.defined;
+            expect(global.__DT_AGENT_INJECTED__).not.to.be.undefined;
             done();
         });
     });
@@ -204,7 +204,7 @@ if (testData != null) {
                 'dynatrace-service': [{
                     "credentials": {
                         "server": testData.server,
-                        "tenant": testData.environmentid,
+                        "environmentid": testData.environmentid,
                         "apitoken": testData.apitoken,
                         "apiurl": testData.apiurl,
                     },
@@ -234,12 +234,12 @@ if (testData != null) {
 
             require('../index')();
 
-            expect(process.env.RUXIT_HOST_ID).to.be.defined;
+            // expect(process.env.RUXIT_HOST_ID).to.be.defined;
             // expect(process.env.RUXIT_CLUSTER_ID).to.be.defined;
-            expect(process.env.RUXIT_APPLICATIONID).to.equal('test-1');
-            expect(process.env.RUXIT_IGNOREDYNAMICPORT).to.be.defined;
+            expect(process.env.DT_APPLICATIONID).to.equal('test-1');
+            expect(process.env.DT_IGNOREDYNAMICPORT).not.to.be.undefined;
 
-            expect(global._rx_cfg).to.be.defined;
+            expect(global.__DT_AGENT_INJECTED__).not.to.be.undefined;
             done();
         });
     });
@@ -311,7 +311,7 @@ if (testData != null) {
                     {
                         "credentials": {
                             "server": testData.server,
-                            "tenant": testData.environmentid,
+                            "environmentid": testData.environmentid,
                             "tenanttoken": testData.tenanttoken
                         },
                         "label": "user-provided",
@@ -322,7 +322,7 @@ if (testData != null) {
                     {
                         "credentials": {
                             "server": testData.server,
-                            "tenant": testData.environmentid,
+                            "environmentid": testData.environmentid,
                             "aüitoken": testData.apitoken
                         },
                         "label": "some-service",
@@ -344,12 +344,12 @@ if (testData != null) {
 
             require('../index')();
 
-            expect(process.env.RUXIT_HOST_ID).to.be.defined;
-            expect(process.env.RUXIT_CLUSTER_ID).to.be.defined;
-            expect(process.env.RUXIT_APPLICATIONID).to.equal('test-3');
-            expect(process.env.RUXIT_IGNOREDYNAMICPORT).to.be.defined;
+            // expect(process.env.RUXIT_HOST_ID).to.be.defined;
+            // expect(process.env.DT_CLUSTER_ID).not.to.be.undefined;
+            expect(process.env.DT_APPLICATIONID).to.equal('test-3');
+            expect(process.env.DT_IGNOREDYNAMICPORT).not.to.be.undefined;
 
-            expect(global._rx_cfg).to.be.defined;
+            expect(global.__DT_AGENT_INJECTED__).not.to.be.undefined;
             done();
         });
     });

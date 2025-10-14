@@ -32,7 +32,7 @@ function _credentials(options) {
     var baseUrl = _api_base_url(options) + '/v1/deployment/installer/agent/connectioninfo';
     debug('Trying to discover credentials from:', baseUrl);
 
-    var res = request('GET', baseUrl + "?Api-Token=" + options.apitoken, { timeout: 5000, socketTimeout: 5000 });
+    var res = request('GET', baseUrl, { timeout: 5000, socketTimeout: 5000, headers: { Authorization: 'Api-Token ' + options.apitoken } });
     if (res.statusCode < 200 || res.statusCode >= 300 || !res.body) {
         debug('Failed fetching credentials, statusCode: ', res.statusCode);
         throw new Error('Failed fetching credentials from ' + baseUrl);
