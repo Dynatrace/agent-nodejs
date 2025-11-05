@@ -20,7 +20,7 @@ function _api_base_url(options) {
         return options.apiurl;
     }
     var base_url = options.endpoint || options.server || 'https://' + _tenant(options) + defaultServer;
-    return base_url.replace('/communication', '').replace(':8443', '').replace(':443', '') + '/api';
+    return base_url.replace('/communication', '') + '/api';
 }
 
 function _credentials(options) {
@@ -32,7 +32,11 @@ function _credentials(options) {
     var baseUrl = _api_base_url(options) + '/v1/deployment/installer/agent/connectioninfo';
     debug('Trying to discover credentials from:', baseUrl);
 
-    var res = request('GET', baseUrl, { timeout: 5000, socketTimeout: 5000, headers: { Authorization: 'Api-Token ' + options.apitoken } });
+    const requestOptions = {
+        timeout: 5000, socketTimeout: 5000,
+        headers: { Authorization: 'Api-Token ' + options.apitoken }
+    };
+    var res = request('GET', baseUrl, requestOptions, options.rejectUnauthorized === true);
     if (res.statusCode < 200 || res.statusCode >= 300 || !res.body) {
         debug('Failed fetching credentials, statusCode: ', res.statusCode);
         throw new Error('Failed fetching credentials from ' + baseUrl);
