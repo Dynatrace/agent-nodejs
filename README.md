@@ -18,12 +18,18 @@ try {
   require('@dynatrace/oneagent')({
     environmentid: '<environmentid>',
     apitoken: '<paastoken>',
-    endpoint: '<endpoint url>' // specify endpoint url - not needed for SaaS customers
+    endpoint: '<endpoint url>', // specify endpoint url - not needed for SaaS customers
+    rejectUnauthorized: true // default is false which allows to use a self-signed certificate, see more below
   });
 } catch (err) {
   console.log('Failed to load OneAgent: ', err);
 }
 ```
+
+The `rejectUnauthorized` option controls TLS certificate verification for the initial request to `/v1/deployment/installer/agent/connectioninfo`.  It has no impact to other OneAgent code module communication nor the monitored application.
+By default, certificate verification is only enforced for requests to Dynatrace domains (e.g., `dynatrace.com`).  
+To enforce TLS certificate verification for all connections and reject self-signed certificates, set `rejectUnauthorized: true`.
+
 #### Emitting debug output
 
 To enable debug output set the `DEBUG` environment variable to `dynatrace*`. For more detail see the [debug module documentation](https://www.npmjs.com/package/debug).

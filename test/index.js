@@ -79,6 +79,7 @@ if (testData != null) {
         it('should return with __DT_AGENT_INJECTED__ set', function (done) {
             require('../index')({
                 server: testData.server,
+                rejectUnauthorized: testData.rejectUnauthorized,
                 environmentid: testData.environmentid,
                 apitoken: testData.apitoken
             });
