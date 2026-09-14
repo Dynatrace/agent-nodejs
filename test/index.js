@@ -40,6 +40,43 @@ describe('Agent loader integrity tests', function () {
 	});
 });
 
+describe('request credential redaction', function () {
+	this.timeout(15000);
+
+	it('do not log Authorization header value', function () {
+		const debugFactory = require('debug');
+		const savedState = debugFactory.disable();
+		debugFactory.enable('dynatrace');
+
+		const captured = [];
+		const originalWrite = process.stderr.write.bind(process.stderr);
+		process.stderr.write = function(chunk) {
+			captured.push(typeof chunk === 'string' ? chunk : chunk.toString());
+			return true;
+		};
+
+		try {
+			const request = require('../lib/request');
+			const secretToken = 'secret-auth-token-12345';
+			try {
+				request('GET', 'https://127.0.0.1:1', { headers: { Authorization: 'Api-Token ' + secretToken } });
+			} catch (e) {
+				// expected: child process fails to connect
+			}
+
+			const output = captured.join('');
+			expect(output).to.not.include(secretToken);
+			expect(output).to.include('<redacted>');
+		} finally {
+			process.stderr.write = originalWrite;
+			debugFactory.disable();
+			if (savedState) {
+				debugFactory.enable(savedState);
+			}
+		}
+	});
+});
+
 /**
  * Testcases depending on testData
  */
